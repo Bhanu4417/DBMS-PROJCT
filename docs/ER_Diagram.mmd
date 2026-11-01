@@ -1,0 +1,98 @@
+erDiagram
+    DEPARTMENT ||--o{ STUDENT : "enrols (0..N)"
+    DEPARTMENT ||--|{ FACULTY : "employs (1..N)"
+    DEPARTMENT ||--|{ COURSE : "owns (1..N)"
+    COURSE ||--o{ COURSE_OFFERING : "is offered as (1..N)"
+    SEMESTER ||--|{ COURSE_OFFERING : "schedules (1..N)"
+    FACULTY ||--o{ FACULTY_ASSIGNMENT : "receives (0..N)"
+    COURSE_OFFERING ||--o{ FACULTY_ASSIGNMENT : "has (0..N)"
+    STUDENT ||--o{ ENROLLMENT : "registers (0..N)"
+    COURSE_OFFERING ||--o{ ENROLLMENT : "contains (0..N)"
+    ENROLLMENT ||--o| GRADE : "achieves (0..1)"
+
+    DEPARTMENT {
+        int department_id PK "surrogate key"
+        varchar department_code UK "CSE, ECE ..."
+        varchar department_name UK
+        varchar office_location "nullable"
+        timestamp created_at "default now()"
+    }
+
+    STUDENT {
+        int student_id PK
+        varchar enrollment_number UK "unique"
+        varchar first_name
+        varchar last_name
+        varchar email UK "unique"
+        varchar phone "nullable, 7-15 chars"
+        date date_of_birth "nullable"
+        varchar gender "Female|Male|Non-binary|Prefer not to say"
+        int admission_year "2000-2100"
+        int department_id FK "nullable -> DEPARTMENT"
+        varchar status "Active|Graduated|Inactive"
+        timestamp created_at
+    }
+
+    FACULTY {
+        int faculty_id PK
+        varchar employee_code UK "unique"
+        varchar first_name
+        varchar last_name
+        varchar email UK "unique"
+        varchar phone "nullable"
+        varchar designation "nullable"
+        date joining_date "nullable"
+        int department_id FK "NOT NULL -> DEPARTMENT"
+        timestamp created_at
+    }
+
+    COURSE {
+        int course_id PK
+        varchar course_code UK "unique, e.g. CSE-301"
+        varchar course_name
+        int credits "CHECK 1..6"
+        int department_id FK "NOT NULL -> DEPARTMENT"
+        text description "nullable"
+    }
+
+    SEMESTER {
+        int semester_id PK
+        varchar semester_name
+        varchar academic_year "format YYYY-YYYY"
+        date start_date
+        date end_date "CHECK end > start"
+        varchar status "Upcoming|Active|Completed"
+    }
+
+    COURSE_OFFERING {
+        int offering_id PK
+        int course_id FK "NOT NULL -> COURSE"
+        int semester_id FK "NOT NULL -> SEMESTER"
+        varchar section
+        int capacity "CHECK > 0"
+        timestamp created_at
+    }
+
+    FACULTY_ASSIGNMENT {
+        int assignment_id PK
+        int faculty_id FK "NOT NULL -> FACULTY"
+        int offering_id FK "NOT NULL -> COURSE_OFFERING"
+        timestamp assigned_at
+    }
+
+    ENROLLMENT {
+        int enrollment_id PK
+        int student_id FK "NOT NULL -> STUDENT"
+        int offering_id FK "NOT NULL -> COURSE_OFFERING"
+        date enrollment_date "default CURRENT_DATE"
+        varchar enrollment_status "Enrolled|Completed|Dropped"
+    }
+
+    GRADE {
+        int grade_id PK
+        int enrollment_id FK "UNIQUE, NOT NULL -> ENROLLMENT"
+        numeric marks_obtained "CHECK 0..max_marks"
+        numeric max_marks "CHECK > 0"
+        varchar grade_letter "A+|A|B+|B|C|D|F"
+        timestamp updated_at
+    }

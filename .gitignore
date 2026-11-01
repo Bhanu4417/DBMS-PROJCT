@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+*.egg-info/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.vite/
+web/.next/
+web/next.log
+web/lib/.data/
+
+# Environment / secrets
+.env
+backend/.env
+frontend/.env
+
+# Database dumps and local artefacts
+*.dump
+*.sql.gz
+.screens/
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/

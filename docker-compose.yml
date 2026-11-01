@@ -1,0 +1,24 @@
+# Optional PostgreSQL 16 for local development.
+#   docker compose up -d
+#   psql -h localhost -U postgres -d college -f database/schema.sql
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: campusos-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: college
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - campusos-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d college"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  campusos-pgdata:

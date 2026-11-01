@@ -1,0 +1,90 @@
+erDiagram
+    DEPARTMENT |o--o{ STUDENT : "has"
+    DEPARTMENT ||--o{ FACULTY : "employs"
+    DEPARTMENT ||--o{ COURSE : "owns"
+    COURSE ||--o{ COURSE_OFFERING : "offers"
+    SEMESTER ||--o{ COURSE_OFFERING : "schedules"
+    FACULTY ||--o{ FACULTY_ASSIGNMENT : "receives"
+    COURSE_OFFERING ||--o{ FACULTY_ASSIGNMENT : "has"
+    STUDENT ||--o{ ENROLLMENT : "registers"
+    COURSE_OFFERING ||--o{ ENROLLMENT : "contains"
+    ENROLLMENT ||--o| GRADE : "has"
+
+    DEPARTMENT {
+        int department_id PK
+        varchar department_code UK "CK2"
+        varchar department_name UK "CK3"
+        varchar office_location "nullable"
+        timestamp created_at "default CURRENT_TIMESTAMP"
+    }
+    STUDENT {
+        int student_id PK
+        varchar enrollment_number UK "CK2"
+        varchar first_name
+        varchar last_name
+        varchar email UK "CK3"
+        varchar phone "nullable"
+        date date_of_birth "nullable"
+        varchar gender "nullable"
+        int admission_year
+        int department_id FK "nullable - DEPARTMENT.department_id"
+        varchar status "default Active"
+        timestamp created_at "default CURRENT_TIMESTAMP"
+    }
+    FACULTY {
+        int faculty_id PK
+        varchar employee_code UK "CK2"
+        varchar first_name
+        varchar last_name
+        varchar email UK "CK3"
+        varchar phone "nullable"
+        varchar designation "nullable"
+        date joining_date "nullable"
+        int department_id FK "DEPARTMENT.department_id"
+        timestamp created_at "default CURRENT_TIMESTAMP"
+    }
+    COURSE {
+        int course_id PK
+        varchar course_code UK "CK2"
+        varchar course_name
+        int credits "1 to 6"
+        int department_id FK "DEPARTMENT.department_id"
+        text description "nullable"
+    }
+    SEMESTER {
+        int semester_id PK
+        varchar semester_name UK "CK2 part 1 - unique pair only"
+        varchar academic_year UK "CK2 part 2 - unique pair only"
+        date start_date
+        date end_date "later than start_date"
+        varchar status "default Upcoming"
+    }
+    COURSE_OFFERING {
+        int offering_id PK
+        int course_id FK,UK "COURSE.course_id - CK2 part 1"
+        int semester_id FK,UK "SEMESTER.semester_id - CK2 part 2"
+        varchar section UK "CK2 part 3 - unique triple only"
+        int capacity "positive"
+        timestamp created_at "default CURRENT_TIMESTAMP"
+    }
+    FACULTY_ASSIGNMENT {
+        int assignment_id PK
+        int faculty_id FK,UK "FACULTY.faculty_id - CK2 part 1"
+        int offering_id FK,UK "COURSE_OFFERING.offering_id - CK2 part 2"
+        timestamp assigned_at "default CURRENT_TIMESTAMP"
+    }
+    ENROLLMENT {
+        int enrollment_id PK
+        int student_id FK,UK "STUDENT.student_id - CK2 part 1"
+        int offering_id FK,UK "COURSE_OFFERING.offering_id - CK2 part 2"
+        date enrollment_date "default CURRENT_DATE"
+        varchar enrollment_status "default Enrolled"
+    }
+    GRADE {
+        int grade_id PK
+        int enrollment_id FK,UK "ENROLLMENT.enrollment_id - CK2 single column"
+        numeric marks_obtained "nullable - 0 to max_marks"
+        numeric max_marks "positive"
+        varchar grade_letter "nullable - independently recorded"
+        timestamp updated_at "default CURRENT_TIMESTAMP"
+    }

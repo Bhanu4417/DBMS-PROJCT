@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 18 18 20;
+  --panel: 18 18 21;
+  --card: 17 17 18;
+  --soft: 36 38 40;
+  --border: 41 41 44;
+  --text: 212 212 216;
+  --muted: 142 142 151;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bg: 244 246 251;
+  --panel: 255 255 255;
+  --card: 255 255 255;
+  --soft: 241 244 250;
+  --border: 226 232 240;
+  --text: 15 23 42;
+  --muted: 100 116 139;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: rgb(var(--bg));
+  color: rgb(var(--text));
+  font-family: "Neue Montreal", ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--border));
+  border-radius: 999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@layer components {
+  .card {
+    @apply bg-card border border-line rounded-lg;
+  }
+  .label {
+    @apply text-xs font-medium uppercase tracking-wide text-muted;
+  }
+  .input {
+    @apply w-full rounded-md border border-line bg-soft px-3 py-2.5 text-sm text-ink
+           placeholder:text-muted/70 outline-none transition
+           focus:border-accent focus:ring-1 focus:ring-accent/20;
+  }
+  .input-error {
+    @apply border-danger/70 focus:border-danger focus:ring-danger/20;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-3.5 py-2.5 text-sm
+           font-medium transition disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-primary {
+    @apply btn bg-accent text-black hover:bg-accent/90;
+  }
+  .btn-ghost {
+    @apply btn border border-line bg-transparent text-ink hover:bg-soft;
+  }
+  .btn-danger {
+    @apply btn bg-danger text-white hover:bg-danger/90;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+  .th {
+    @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted;
+  }
+  .td {
+    @apply px-4 py-3 text-sm text-ink align-middle;
+  }
+  .row {
+    @apply border-t border-line/70 transition hover:bg-soft/60;
+  }
+  .skeleton {
+    @apply animate-pulse rounded-md bg-soft;
+  }
+}
+
+.sidebar-collapsed .nav-label,
+.sidebar-collapsed .brand-text,
+.sidebar-collapsed .nav-section {
+  display: none;
+}
+
+.sidebar-collapsed {
+  width: 76px !important;
+}
+
+.recharts-cartesian-axis-tick text {
+  fill: rgb(var(--muted));
+  font-size: 12px;
+}
+
+.recharts-default-tooltip {
+  background: rgb(var(--card)) !important;
+  border: 1px solid rgb(var(--border)) !important;
+  border-radius: 10px !important;
+  color: rgb(var(--text)) !important;
+}
+
+@font-face{font-family:'Neue Montreal';src:url('/fonts/Neue Montreal Medium 500.otf') format('opentype');font-style:normal;font-weight:100 900;font-display:swap}
+@font-face{font-family:'Degular';src:url('/fonts/DegularDisplayDemo-Bold.otf') format('opentype');font-weight:700;font-display:swap}
+h1{font-family:'Degular','Neue Montreal',sans-serif;font-size:32px!important;letter-spacing:-.5px}
+.boot{padding:36px;color:#d4d4d8}.boot span{color:#777a7d}
+.card{box-shadow:none!important}.rounded-2xl{border-radius:8px}.rounded-xl{border-radius:6px}
+header{backdrop-filter:none!important}button:focus-visible,a:focus-visible{outline:1px solid #83D63B;outline-offset:3px}
+::selection{background:#83D63B;color:#111112}
