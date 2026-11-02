@@ -183,6 +183,7 @@ export const resources = {
       { value: 'credits', label: 'Credits' },
     ],
     columns: [
+      { key: 'course_id', label: 'Course ID', type: 'count' },
       { key: 'course_code', label: 'Course code', sortable: 'code', type: 'code' },
       { key: 'course_name', label: 'Course', type: 'primary', sub: 'description' },
       { key: 'credits', label: 'Credits', type: 'count', sortable: 'credits' },
@@ -222,6 +223,7 @@ export const resources = {
       { value: 'status', label: 'Status' },
     ],
     columns: [
+      { key: 'semester_id', label: 'Semester ID', type: 'count' },
       { key: 'semester_name', label: 'Semester', type: 'primary', sub: 'academic_year' },
       { key: 'start_date', label: 'Starts', type: 'date' },
       { key: 'end_date', label: 'Ends', type: 'date' },
@@ -264,7 +266,8 @@ export const resources = {
       { value: 'capacity', label: 'Capacity' },
     ],
     columns: [
-      { key: 'course_code', label: 'Course', type: 'primary', sub: 'course_name' },
+      { key: 'course_id', label: 'Course ID', type: 'count' },
+      { key: 'course_code', label: 'Course code', type: 'primary', sub: 'course_name' },
       { key: 'semester_name', label: 'Semester', sub: 'academic_year' },
       { key: 'section', label: 'Section', type: 'code' },
       { key: 'capacity', label: 'Capacity', type: 'count' },
