@@ -10,6 +10,7 @@ node_modules/
 frontend/dist/
 frontend/.vite/
 web/.next/
+web/.next-dev/
 web/next.log
 web/lib/.data/
 
