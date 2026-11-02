@@ -49,6 +49,7 @@ export const resources = {
       { value: 'enrollment_number', label: 'Enrollment number' },
     ],
     columns: [
+      { key: 'student_id', label: 'Student ID', type: 'count' },
       { key: 'enrollment_number', label: 'Enrollment no.', sortable: 'enrollment_number' },
       { key: 'full_name', label: 'Student', type: 'primary', sub: 'email' },
       { key: 'department_name', label: 'Department' },
@@ -105,6 +106,7 @@ export const resources = {
       { value: 'employee_code', label: 'Employee code' },
     ],
     columns: [
+      { key: 'faculty_id', label: 'Faculty ID', type: 'count' },
       { key: 'employee_code', label: 'Employee code', sortable: 'employee_code' },
       { key: 'full_name', label: 'Faculty member', type: 'primary', sub: 'email' },
       { key: 'designation', label: 'Designation' },
@@ -148,6 +150,7 @@ export const resources = {
       { value: 'name', label: 'Name' },
     ],
     columns: [
+      { key: 'department_id', label: 'Department ID', type: 'count' },
       { key: 'department_code', label: 'Code', sortable: 'code', type: 'code' },
       { key: 'department_name', label: 'Department', type: 'primary', sub: 'office_location' },
       { key: 'student_count', label: 'Students', type: 'count', sortable: null },
@@ -183,6 +186,7 @@ export const resources = {
       { value: 'credits', label: 'Credits' },
     ],
     columns: [
+      { key: 'offering_id', label: 'Offering ID', type: 'count' },
       { key: 'course_id', label: 'Course ID', type: 'count' },
       { key: 'course_code', label: 'Course code', sortable: 'code', type: 'code' },
       { key: 'course_name', label: 'Course', type: 'primary', sub: 'description' },
@@ -306,6 +310,7 @@ export const resources = {
       { value: 'course', label: 'Course code' },
     ],
     columns: [
+      { key: 'assignment_id', label: 'Assignment ID', type: 'count' },
       { key: 'faculty_name', label: 'Faculty', type: 'primary', sub: 'employee_code' },
       { key: 'course_code', label: 'Course', type: 'primary', sub: 'course_name' },
       { key: 'semester_name', label: 'Semester', sub: 'academic_year' },
@@ -341,6 +346,7 @@ export const resources = {
       { value: 'course', label: 'Course code' },
     ],
     columns: [
+      { key: 'enrollment_id', label: 'Enrollment ID', type: 'count' },
       { key: 'student_name', label: 'Student', type: 'primary', sub: 'enrollment_number' },
       { key: 'course_code', label: 'Course', type: 'primary', sub: 'course_name' },
       { key: 'semester_name', label: 'Semester', sub: 'academic_year' },
@@ -385,6 +391,7 @@ export const resources = {
       { value: 'marks', label: 'Marks' },
     ],
     columns: [
+      { key: 'grade_id', label: 'Grade ID', type: 'count' },
       { key: 'student_name', label: 'Student', type: 'primary', sub: 'enrollment_number' },
       { key: 'course_code', label: 'Course', type: 'primary', sub: 'course_name' },
       { key: 'semester_name', label: 'Semester', sub: 'academic_year' },
