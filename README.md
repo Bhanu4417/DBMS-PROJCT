@@ -24,7 +24,18 @@ same capacity-enforced enrollment.
 
 ---
 
-## 1. Run the Next.js build (primary)
+## Quick start (from the repository root)
+
+```bash
+cd /home/bhanu/code/shoptaker
+npm install       # first time only; installs the web workspace dependencies
+npm run dev       # starts Next.js at http://localhost:3000
+```
+
+Stop the server with **Ctrl+C**. To run the PostgreSQL/FastAPI/Vite edition instead,
+follow section 2 below. `npm run dev` at the repository root starts the Next.js build;
+no need to `cd web` first.
+
 
 ```bash
 cd web
