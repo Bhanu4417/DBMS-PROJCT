@@ -46,7 +46,7 @@ export default function Sidebar({ collapsed, onToggle }) {
         {!collapsed && (
           <div className="brand-text leading-tight">
             <p className="text-sm font-bold tracking-wide text-ink">
-              shoptaker<span className="text-muted"> / college</span>
+              CampusOS
             </p>
             <p className="text-[11px] text-muted">College administration</p>
           </div>

@@ -20,7 +20,7 @@ export default function AppLayout({children}) {
           <div className="absolute inset-y-0 left-0 w-64 border-r border-line bg-panel p-4">
             <div className="mb-4 flex items-center justify-between">
               <span className="flex items-center gap-2 text-sm font-bold text-ink">
-                <GraduationCap size={18} className="text-accent" /> shoptaker
+                <GraduationCap size={18} className="text-accent" /> CampusOS
                 <span className="-ml-2 text-accent">OS</span>
               </span>
               <button
@@ -60,7 +60,7 @@ export default function AppLayout({children}) {
           {children}
         </main>
         <footer className="mx-auto w-full max-w-[1500px] px-4 pb-8 text-xs text-muted sm:px-6 lg:px-8">
-          shoptaker / college · College Management System · data served live from SQLite through Next.js
+          CampusOS · College Management System · data served live from SQLite through Next.js
         </footer>
       </div>
     </div>

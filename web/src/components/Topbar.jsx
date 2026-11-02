@@ -10,7 +10,7 @@ function currentTitle(pathname) {
     if (pathname.split('/').length > 2) return `${match.label} details`;
     return match.label;
   }
-  return 'shoptaker / college';
+  return 'CampusOS';
 }
 
 export default function Topbar({ theme, onToggleTheme, onOpenMobileNav }) {
@@ -37,7 +37,7 @@ export default function Topbar({ theme, onToggleTheme, onOpenMobileNav }) {
 
       <div className="mr-auto min-w-0">
         <h2 className="truncate text-base font-semibold text-ink">{currentTitle(location.pathname)}</h2>
-        <p className="text-[11px] text-muted">shoptaker / college · Next.js · local relational demo</p>
+        <p className="text-[11px] text-muted">CampusOS · Next.js · local relational demo</p>
       </div>
 
       <form onSubmit={submitSearch} className="relative hidden sm:block">
