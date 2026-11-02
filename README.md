@@ -1,6 +1,7 @@
 # shoptaker — College Management (DBMS project)
 
-A complete, working college administration system — records live in a relational
+**Complete DBMS reference:** [`project.md`](project.md) documents every table, attribute, key, constraint, relationship, normalization step, join/filter path, index, transaction, report and project code path.
+
 database, are served by a REST API, and are managed through a Tailwind admin dashboard.
 Nothing is mocked: every table cell, statistic, chart and report is a live SQL query,
 and every form writes to the database.
