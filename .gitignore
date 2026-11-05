@@ -12,7 +12,7 @@ frontend/.vite/
 web/.next/
 web/.next-dev/
 web/next.log
-web/lib/.data/
+
 
 # Environment / secrets
 .env
@@ -28,3 +28,8 @@ frontend/.env
 .DS_Store
 .idea/
 .vscode/
+
+# Local database and personal-data snapshot
+web/lib/.data/
+database/live_snapshot.sql
+database/live_snapshot.sql.*.tmp

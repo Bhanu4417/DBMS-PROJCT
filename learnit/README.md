@@ -1,4 +1,23 @@
-# Learnit: corrected CampusOS study pack
+# Learnit: CampusOS study pack
+
+## Current extended implementation (16 tables)
+
+Start with [Portal ER explanation](Portal_ER.md): 12 domain tables plus 4 authentication/support tables, derived from the current `web/lib/schema.mjs` and `web/lib/portal.mjs`.
+
+- **Conceptual domain ER (Chen-inspired):** [SVG / editable source](CampusOS_Conceptual_ER.svg) · [PNG](CampusOS_Conceptual_ER.png) · [PDF](CampusOS_Conceptual_ER.pdf)
+- **Complete relational ER:** [SVG / editable source](CampusOS_Relational_ER.svg) · [PNG](CampusOS_Relational_ER.png)
+- [Exact schema inventory](CampusOS_schema.json) · [Reproducible Chromium renderer](render-campus-er.mjs)
+
+```sh
+node learnit/render-campus-er.mjs
+```
+
+Uses the existing `web` Puppeteer dependency and system Chromium; no installation required. The conceptual diagram adopts the supplied hospital report's page-2 notation, not its topology or inheritance. See the explanation for precise cardinalities, constraints and role semantics.
+
+## Historical academic9 study pack
+
+The original nine-table diagrams and chapters below are preserved unchanged. They do **not** cover the current portal's attendance, library or authentication tables.
+
 
 The syllabus image is **unavailable** in this session. Topic mapping in [topics.md](topics.md) is based on the prior discussion supplied in the request, not on claimed image access. It is a topic checklist, not a verified transcription of an official syllabus.
 

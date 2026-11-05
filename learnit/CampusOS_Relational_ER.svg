@@ -1,0 +1,429 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2980" height="3490" viewBox="0 0 2980 3490" role="img" aria-labelledby="title desc"><title id="title">CampusOS | Full relational ER</title><desc id="desc">IMPLEMENTATION PLATE  /  16 tables  /  Exact column names and SQL types  /  Domain (12) and technical auth/support (4)</desc><style>text{font-family:Arial,Helvetica,sans-serif;fill:#111} .line{fill:none;stroke:#222;stroke-width:2} .key{text-decoration:underline;font-weight:bold} .small{font-size:17px} .body{font-size:20px} .mono{font-family:monospace;font-size:18px}</style><rect width="100%" height="100%" fill="white"/>
+<text x="65" y="65" font-size="36" font-weight="bold">CampusOS | Full relational ER</text>
+<text x="65" y="105" font-size="19" >IMPLEMENTATION PLATE  /  16 tables  /  Exact column names and SQL types  /  Domain (12) and technical auth/support (4)</text>
+<text x="65" y="148" font-size="18" >PK = primary key (underlined)   FK = foreign key   UQ = unique   NN = NOT NULL   ? = nullable declaration   D = SQL default</text>
+<text x="65" y="179" font-size="18" >R# identifies an FK connector and the precise relationship register below. Counts: child → parent; parent → child. Lines are not inheritance.</text>
+<rect x="2265" y="205" width="660" height="2810" fill="none" stroke="#555" stroke-width="2" stroke-dasharray="12 8"/>
+<text x="2300" y="242" font-size="23" font-weight="bold">TECHNICAL AUTH / SUPPORT</text>
+<polyline points="650,1982 685,1982 685,370 820,370" class="line" stroke="white" stroke-width="7"/>
+<polyline points="650,1982 685,1982 685,370 820,370" class="line" />
+<text x="690" y="1974" font-size="16" font-weight="bold">0</text>
+<polyline points="650,594 705,594 705,370 820,370" class="line" stroke="white" stroke-width="7"/>
+<polyline points="650,594 705,594 705,370 820,370" class="line" />
+<text x="710" y="586" font-size="16" font-weight="bold">0</text>
+<polyline points="1550,482 1475,482 1475,370 1380,370" class="line" stroke="white" stroke-width="7"/>
+<polyline points="1550,482 1475,482 1475,370 1380,370" class="line" />
+<text x="1480" y="474" font-size="16" font-weight="bold">0</text>
+<polyline points="1380,1106 1475,1106 1475,1050 1550,1050" class="line" stroke="white" stroke-width="7"/>
+<polyline points="1380,1106 1475,1106 1475,1050 1550,1050" class="line" />
+<text x="1480" y="1098" font-size="16" font-weight="bold">0</text>
+<polyline points="1380,1078 1415,1078 1415,370 1550,370" class="line" stroke="white" stroke-width="7"/>
+<polyline points="1380,1078 1415,1078 1415,370 1550,370" class="line" />
+<text x="1420" y="1070" font-size="16" font-weight="bold">1</text>
+<polyline points="650,1106 705,1106 705,1050 820,1050" class="line" stroke="white" stroke-width="7"/>
+<polyline points="650,1106 705,1106 705,1050 820,1050" class="line" />
+<text x="710" y="1098" font-size="16" font-weight="bold">0</text>
+<polyline points="90,1078 65,1078 65,370 90,370" class="line" stroke="white" stroke-width="7"/>
+<polyline points="90,1078 65,1078 65,370 90,370" class="line" />
+<text x="70" y="1070" font-size="16" font-weight="bold">1</text>
+<polyline points="820,1786 779,1786 779,1050 820,1050" class="line" stroke="white" stroke-width="7"/>
+<polyline points="820,1786 779,1786 779,1050 820,1050" class="line" />
+<text x="784" y="1778" font-size="16" font-weight="bold">0</text>
+<polyline points="820,1758 785,1758 785,1730 650,1730" class="line" stroke="white" stroke-width="7"/>
+<polyline points="820,1758 785,1758 785,1730 650,1730" class="line" />
+<text x="790" y="1750" font-size="16" font-weight="bold">1</text>
+<polyline points="1550,1758 1495,1758 1495,1730 1380,1730" class="line" stroke="white" stroke-width="7"/>
+<polyline points="1550,1758 1495,1758 1495,1730 1380,1730" class="line" />
+<text x="1500" y="1750" font-size="16" font-weight="bold">0</text>
+<polyline points="2280,454 2205,454 2205,1730 650,1730" class="line" stroke="white" stroke-width="7"/>
+<polyline points="2280,454 2205,454 2205,1730 650,1730" class="line" />
+<text x="2210" y="446" font-size="16" font-weight="bold">0</text>
+<polyline points="2280,1078 2223,1078 2223,370 2280,370" class="line" stroke="white" stroke-width="7"/>
+<polyline points="2280,1078 2223,1078 2223,370 2280,370" class="line" />
+<text x="2228" y="1070" font-size="16" font-weight="bold">0</text>
+<polyline points="1550,2438 1515,2438 1515,1730 1380,1730" class="line" stroke="white" stroke-width="7"/>
+<polyline points="1550,2438 1515,2438 1515,1730 1380,1730" class="line" />
+<text x="1520" y="2430" font-size="16" font-weight="bold">0</text>
+<polyline points="820,2466 765,2466 765,2410 650,2410" class="line" stroke="white" stroke-width="7"/>
+<polyline points="820,2466 765,2466 765,2410 650,2410" class="line" />
+<text x="770" y="2458" font-size="16" font-weight="bold">0</text>
+<polyline points="820,2438 745,2438 745,1730 650,1730" class="line" stroke="white" stroke-width="7"/>
+<polyline points="820,2438 745,2438 745,1730 650,1730" class="line" />
+<text x="750" y="2430" font-size="16" font-weight="bold">1</text>
+<rect x="820" y="285" width="560" height="329" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="820,334 1380,334" class="line" />
+<text x="838" y="317" font-size="25" font-weight="bold">department</text>
+<text x="837" y="368" font-size="18" class="key">department_id</text>
+<text x="1135" y="368" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1245" y="368" font-size="14" >PK</text>
+<text x="837" y="396" font-size="18" class="mono">department_code</text>
+<text x="1135" y="396" font-size="16" font-family="monospace">VARCHAR(10)</text>
+<text x="1245" y="396" font-size="14" >UQ NN</text>
+<text x="837" y="424" font-size="18" class="mono">department_name</text>
+<text x="1135" y="424" font-size="16" font-family="monospace">VARCHAR(100)</text>
+<text x="1245" y="424" font-size="14" >UQ NN</text>
+<text x="837" y="452" font-size="18" class="mono">office_location</text>
+<text x="1135" y="452" font-size="16" font-family="monospace">VARCHAR(100)</text>
+<text x="1245" y="452" font-size="14" >?</text>
+<text x="837" y="480" font-size="18" class="mono">created_at</text>
+<text x="1135" y="480" font-size="16" font-family="monospace">TIMESTAMP</text>
+<text x="1245" y="480" font-size="14" >NN</text>
+<polyline points="820,514 1380,514" class="line" />
+<text x="835" y="537" font-size="15" >UQ (department_name)</text>
+<text x="835" y="563" font-size="15" >UQ (department_code)</text>
+<text x="835" y="588" font-size="14" >D: created_at=CURRENT_TIMESTAMP</text>
+<rect x="90" y="1645" width="560" height="525" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="90,1694 650,1694" class="line" />
+<text x="108" y="1677" font-size="25" font-weight="bold">student</text>
+<text x="107" y="1728" font-size="18" class="key">student_id</text>
+<text x="405" y="1728" font-size="16" font-family="monospace">INTEGER</text>
+<text x="515" y="1728" font-size="14" >PK</text>
+<text x="107" y="1756" font-size="18" class="mono">enrollment_number</text>
+<text x="405" y="1756" font-size="16" font-family="monospace">VARCHAR(30)</text>
+<text x="515" y="1756" font-size="14" >UQ NN</text>
+<text x="107" y="1784" font-size="18" class="mono">first_name</text>
+<text x="405" y="1784" font-size="16" font-family="monospace">VARCHAR(50)</text>
+<text x="515" y="1784" font-size="14" >NN</text>
+<text x="107" y="1812" font-size="18" class="mono">last_name</text>
+<text x="405" y="1812" font-size="16" font-family="monospace">VARCHAR(50)</text>
+<text x="515" y="1812" font-size="14" >NN</text>
+<text x="107" y="1840" font-size="18" class="mono">email</text>
+<text x="405" y="1840" font-size="16" font-family="monospace">VARCHAR(150)</text>
+<text x="515" y="1840" font-size="14" >UQ NN</text>
+<text x="107" y="1868" font-size="18" class="mono">phone</text>
+<text x="405" y="1868" font-size="16" font-family="monospace">VARCHAR(15)</text>
+<text x="515" y="1868" font-size="14" >?</text>
+<text x="107" y="1896" font-size="18" class="mono">date_of_birth</text>
+<text x="405" y="1896" font-size="16" font-family="monospace">DATE</text>
+<text x="515" y="1896" font-size="14" >?</text>
+<text x="107" y="1924" font-size="18" class="mono">gender</text>
+<text x="405" y="1924" font-size="16" font-family="monospace">VARCHAR(20)</text>
+<text x="515" y="1924" font-size="14" >?</text>
+<text x="107" y="1952" font-size="18" class="mono">admission_year</text>
+<text x="405" y="1952" font-size="16" font-family="monospace">INTEGER</text>
+<text x="515" y="1952" font-size="14" >NN</text>
+<text x="107" y="1980" font-size="18" class="mono">department_id</text>
+<text x="405" y="1980" font-size="16" font-family="monospace">INTEGER</text>
+<text x="515" y="1980" font-size="14" >FK 0 ?</text>
+<text x="107" y="2008" font-size="18" class="mono">status</text>
+<text x="405" y="2008" font-size="16" font-family="monospace">VARCHAR(20)</text>
+<text x="515" y="2008" font-size="14" >NN</text>
+<text x="107" y="2036" font-size="18" class="mono">created_at</text>
+<text x="405" y="2036" font-size="16" font-family="monospace">TIMESTAMP</text>
+<text x="515" y="2036" font-size="14" >NN</text>
+<polyline points="90,2070 650,2070" class="line" />
+<text x="105" y="2093" font-size="15" >UQ (email)</text>
+<text x="105" y="2119" font-size="15" >UQ (enrollment_number)</text>
+<text x="105" y="2144" font-size="14" >D: status='Active'; created_at=CURRENT_TIMESTAMP</text>
+<rect x="90" y="285" width="560" height="469" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="90,334 650,334" class="line" />
+<text x="108" y="317" font-size="25" font-weight="bold">faculty</text>
+<text x="107" y="368" font-size="18" class="key">faculty_id</text>
+<text x="405" y="368" font-size="16" font-family="monospace">INTEGER</text>
+<text x="515" y="368" font-size="14" >PK</text>
+<text x="107" y="396" font-size="18" class="mono">employee_code</text>
+<text x="405" y="396" font-size="16" font-family="monospace">VARCHAR(30)</text>
+<text x="515" y="396" font-size="14" >UQ NN</text>
+<text x="107" y="424" font-size="18" class="mono">first_name</text>
+<text x="405" y="424" font-size="16" font-family="monospace">VARCHAR(50)</text>
+<text x="515" y="424" font-size="14" >NN</text>
+<text x="107" y="452" font-size="18" class="mono">last_name</text>
+<text x="405" y="452" font-size="16" font-family="monospace">VARCHAR(50)</text>
+<text x="515" y="452" font-size="14" >NN</text>
+<text x="107" y="480" font-size="18" class="mono">email</text>
+<text x="405" y="480" font-size="16" font-family="monospace">VARCHAR(150)</text>
+<text x="515" y="480" font-size="14" >UQ NN</text>
+<text x="107" y="508" font-size="18" class="mono">phone</text>
+<text x="405" y="508" font-size="16" font-family="monospace">VARCHAR(15)</text>
+<text x="515" y="508" font-size="14" >?</text>
+<text x="107" y="536" font-size="18" class="mono">designation</text>
+<text x="405" y="536" font-size="16" font-family="monospace">VARCHAR(100)</text>
+<text x="515" y="536" font-size="14" >?</text>
+<text x="107" y="564" font-size="18" class="mono">joining_date</text>
+<text x="405" y="564" font-size="16" font-family="monospace">DATE</text>
+<text x="515" y="564" font-size="14" >?</text>
+<text x="107" y="592" font-size="18" class="mono">department_id</text>
+<text x="405" y="592" font-size="16" font-family="monospace">INTEGER</text>
+<text x="515" y="592" font-size="14" >FK 0 NN</text>
+<text x="107" y="620" font-size="18" class="mono">created_at</text>
+<text x="405" y="620" font-size="16" font-family="monospace">TIMESTAMP</text>
+<text x="515" y="620" font-size="14" >NN</text>
+<polyline points="90,654 650,654" class="line" />
+<text x="105" y="677" font-size="15" >UQ (email)</text>
+<text x="105" y="703" font-size="15" >UQ (employee_code)</text>
+<text x="105" y="728" font-size="14" >D: created_at=CURRENT_TIMESTAMP</text>
+<rect x="1550" y="285" width="560" height="331" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="1550,334 2110,334" class="line" />
+<text x="1568" y="317" font-size="25" font-weight="bold">course</text>
+<text x="1567" y="368" font-size="18" class="key">course_id</text>
+<text x="1865" y="368" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1975" y="368" font-size="14" >PK</text>
+<text x="1567" y="396" font-size="18" class="mono">course_code</text>
+<text x="1865" y="396" font-size="16" font-family="monospace">VARCHAR(20)</text>
+<text x="1975" y="396" font-size="14" >UQ NN</text>
+<text x="1567" y="424" font-size="18" class="mono">course_name</text>
+<text x="1865" y="424" font-size="16" font-family="monospace">VARCHAR(150)</text>
+<text x="1975" y="424" font-size="14" >NN</text>
+<text x="1567" y="452" font-size="18" class="mono">credits</text>
+<text x="1865" y="452" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1975" y="452" font-size="14" >NN</text>
+<text x="1567" y="480" font-size="18" class="mono">department_id</text>
+<text x="1865" y="480" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1975" y="480" font-size="14" >FK 0 NN</text>
+<text x="1567" y="508" font-size="18" class="mono">description</text>
+<text x="1865" y="508" font-size="16" font-family="monospace">TEXT</text>
+<text x="1975" y="508" font-size="14" >?</text>
+<polyline points="1550,542 2110,542" class="line" />
+<text x="1565" y="565" font-size="15" >UQ (course_code)</text>
+<rect x="1550" y="965" width="560" height="331" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="1550,1014 2110,1014" class="line" />
+<text x="1568" y="997" font-size="25" font-weight="bold">semester</text>
+<text x="1567" y="1048" font-size="18" class="key">semester_id</text>
+<text x="1865" y="1048" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1975" y="1048" font-size="14" >PK</text>
+<text x="1567" y="1076" font-size="18" class="mono">semester_name</text>
+<text x="1865" y="1076" font-size="16" font-family="monospace">VARCHAR(50)</text>
+<text x="1975" y="1076" font-size="14" >NN</text>
+<text x="1567" y="1104" font-size="18" class="mono">academic_year</text>
+<text x="1865" y="1104" font-size="16" font-family="monospace">VARCHAR(9)</text>
+<text x="1975" y="1104" font-size="14" >NN</text>
+<text x="1567" y="1132" font-size="18" class="mono">start_date</text>
+<text x="1865" y="1132" font-size="16" font-family="monospace">DATE</text>
+<text x="1975" y="1132" font-size="14" >NN</text>
+<text x="1567" y="1160" font-size="18" class="mono">end_date</text>
+<text x="1865" y="1160" font-size="16" font-family="monospace">DATE</text>
+<text x="1975" y="1160" font-size="14" >NN</text>
+<text x="1567" y="1188" font-size="18" class="mono">status</text>
+<text x="1865" y="1188" font-size="16" font-family="monospace">VARCHAR(20)</text>
+<text x="1975" y="1188" font-size="14" >NN</text>
+<polyline points="1550,1222 2110,1222" class="line" />
+<text x="1565" y="1245" font-size="15" >UQ (semester_name, academic_year)</text>
+<text x="1565" y="1270" font-size="14" >D: status='Upcoming'</text>
+<rect x="820" y="965" width="560" height="331" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="820,1014 1380,1014" class="line" />
+<text x="838" y="997" font-size="25" font-weight="bold">course_offering</text>
+<text x="837" y="1048" font-size="18" class="key">offering_id</text>
+<text x="1135" y="1048" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1245" y="1048" font-size="14" >PK</text>
+<text x="837" y="1076" font-size="18" class="mono">course_id</text>
+<text x="1135" y="1076" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1245" y="1076" font-size="14" >FK 1 NN</text>
+<text x="837" y="1104" font-size="18" class="mono">semester_id</text>
+<text x="1135" y="1104" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1245" y="1104" font-size="14" >FK 0 NN</text>
+<text x="837" y="1132" font-size="18" class="mono">section</text>
+<text x="1135" y="1132" font-size="16" font-family="monospace">VARCHAR(20)</text>
+<text x="1245" y="1132" font-size="14" >NN</text>
+<text x="837" y="1160" font-size="18" class="mono">capacity</text>
+<text x="1135" y="1160" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1245" y="1160" font-size="14" >NN</text>
+<text x="837" y="1188" font-size="18" class="mono">created_at</text>
+<text x="1135" y="1188" font-size="16" font-family="monospace">TIMESTAMP</text>
+<text x="1245" y="1188" font-size="14" >NN</text>
+<polyline points="820,1222 1380,1222" class="line" />
+<text x="835" y="1245" font-size="15" >UQ (course_id, semester_id, section)</text>
+<text x="835" y="1270" font-size="14" >D: created_at=CURRENT_TIMESTAMP</text>
+<rect x="90" y="965" width="560" height="275" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="90,1014 650,1014" class="line" />
+<text x="108" y="997" font-size="25" font-weight="bold">faculty_assignment</text>
+<text x="107" y="1048" font-size="18" class="key">assignment_id</text>
+<text x="405" y="1048" font-size="16" font-family="monospace">INTEGER</text>
+<text x="515" y="1048" font-size="14" >PK</text>
+<text x="107" y="1076" font-size="18" class="mono">faculty_id</text>
+<text x="405" y="1076" font-size="16" font-family="monospace">INTEGER</text>
+<text x="515" y="1076" font-size="14" >FK 1 NN</text>
+<text x="107" y="1104" font-size="18" class="mono">offering_id</text>
+<text x="405" y="1104" font-size="16" font-family="monospace">INTEGER</text>
+<text x="515" y="1104" font-size="14" >FK 0 NN</text>
+<text x="107" y="1132" font-size="18" class="mono">assigned_at</text>
+<text x="405" y="1132" font-size="16" font-family="monospace">TIMESTAMP</text>
+<text x="515" y="1132" font-size="14" >NN</text>
+<polyline points="90,1166 650,1166" class="line" />
+<text x="105" y="1189" font-size="15" >UQ (faculty_id, offering_id)</text>
+<text x="105" y="1214" font-size="14" >D: assigned_at=CURRENT_TIMESTAMP</text>
+<rect x="820" y="1645" width="560" height="303" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="820,1694 1380,1694" class="line" />
+<text x="838" y="1677" font-size="25" font-weight="bold">enrollment</text>
+<text x="837" y="1728" font-size="18" class="key">enrollment_id</text>
+<text x="1135" y="1728" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1245" y="1728" font-size="14" >PK</text>
+<text x="837" y="1756" font-size="18" class="mono">student_id</text>
+<text x="1135" y="1756" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1245" y="1756" font-size="14" >FK 1 NN</text>
+<text x="837" y="1784" font-size="18" class="mono">offering_id</text>
+<text x="1135" y="1784" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1245" y="1784" font-size="14" >FK 0 NN</text>
+<text x="837" y="1812" font-size="18" class="mono">enrollment_date</text>
+<text x="1135" y="1812" font-size="16" font-family="monospace">DATE</text>
+<text x="1245" y="1812" font-size="14" >NN</text>
+<text x="837" y="1840" font-size="18" class="mono">enrollment_status</text>
+<text x="1135" y="1840" font-size="16" font-family="monospace">VARCHAR(20)</text>
+<text x="1245" y="1840" font-size="14" >NN</text>
+<polyline points="820,1874 1380,1874" class="line" />
+<text x="835" y="1897" font-size="15" >UQ (student_id, offering_id)</text>
+<text x="835" y="1922" font-size="14" >D: enrollment_date=CURRENT_DATE; enrollment_status='Enrolled'</text>
+<rect x="1550" y="1645" width="560" height="331" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="1550,1694 2110,1694" class="line" />
+<text x="1568" y="1677" font-size="25" font-weight="bold">grade</text>
+<text x="1567" y="1728" font-size="18" class="key">grade_id</text>
+<text x="1865" y="1728" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1975" y="1728" font-size="14" >PK</text>
+<text x="1567" y="1756" font-size="18" class="mono">enrollment_id</text>
+<text x="1865" y="1756" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1975" y="1756" font-size="14" >FK 0 UQ NN</text>
+<text x="1567" y="1784" font-size="18" class="mono">marks_obtained</text>
+<text x="1865" y="1784" font-size="16" font-family="monospace">REAL</text>
+<text x="1975" y="1784" font-size="14" >?</text>
+<text x="1567" y="1812" font-size="18" class="mono">max_marks</text>
+<text x="1865" y="1812" font-size="16" font-family="monospace">REAL</text>
+<text x="1975" y="1812" font-size="14" >NN</text>
+<text x="1567" y="1840" font-size="18" class="mono">grade_letter</text>
+<text x="1865" y="1840" font-size="16" font-family="monospace">VARCHAR(2)</text>
+<text x="1975" y="1840" font-size="14" >?</text>
+<text x="1567" y="1868" font-size="18" class="mono">updated_at</text>
+<text x="1865" y="1868" font-size="16" font-family="monospace">TIMESTAMP</text>
+<text x="1975" y="1868" font-size="14" >NN</text>
+<polyline points="1550,1902 2110,1902" class="line" />
+<text x="1565" y="1925" font-size="15" >UQ (enrollment_id)</text>
+<text x="1565" y="1950" font-size="14" >D: updated_at=CURRENT_TIMESTAMP</text>
+<rect x="2280" y="285" width="560" height="357" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="2280,334 2840,334" class="line" />
+<text x="2298" y="317" font-size="25" font-weight="bold">portal_account</text>
+<text x="2297" y="368" font-size="18" class="key">account_id</text>
+<text x="2595" y="368" font-size="16" font-family="monospace">INTEGER</text>
+<text x="2705" y="368" font-size="14" >PK</text>
+<text x="2297" y="396" font-size="18" class="mono">email</text>
+<text x="2595" y="396" font-size="16" font-family="monospace">TEXT</text>
+<text x="2705" y="396" font-size="14" >UQ NN</text>
+<text x="2297" y="424" font-size="18" class="mono">role</text>
+<text x="2595" y="424" font-size="16" font-family="monospace">TEXT</text>
+<text x="2705" y="424" font-size="14" >NN</text>
+<text x="2297" y="452" font-size="18" class="mono">student_id</text>
+<text x="2595" y="452" font-size="16" font-family="monospace">INTEGER</text>
+<text x="2705" y="452" font-size="14" >FK 0 UQ ?</text>
+<text x="2297" y="480" font-size="18" class="mono">password_salt</text>
+<text x="2595" y="480" font-size="16" font-family="monospace">TEXT</text>
+<text x="2705" y="480" font-size="14" >NN</text>
+<text x="2297" y="508" font-size="18" class="mono">password_hash</text>
+<text x="2595" y="508" font-size="16" font-family="monospace">TEXT</text>
+<text x="2705" y="508" font-size="14" >NN</text>
+<polyline points="2280,542 2840,542" class="line" />
+<text x="2295" y="565" font-size="15" >UQ (student_id)</text>
+<text x="2295" y="591" font-size="15" >UQ (email)</text>
+<rect x="2280" y="965" width="560" height="247" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="2280,1014 2840,1014" class="line" />
+<text x="2298" y="997" font-size="25" font-weight="bold">portal_session</text>
+<text x="2297" y="1048" font-size="18" class="key">token_hash</text>
+<text x="2595" y="1048" font-size="16" font-family="monospace">TEXT</text>
+<text x="2705" y="1048" font-size="14" >PK</text>
+<text x="2297" y="1076" font-size="18" class="mono">account_id</text>
+<text x="2595" y="1076" font-size="16" font-family="monospace">INTEGER</text>
+<text x="2705" y="1076" font-size="14" >FK 0 NN</text>
+<text x="2297" y="1104" font-size="18" class="mono">expires_at</text>
+<text x="2595" y="1104" font-size="16" font-family="monospace">INTEGER</text>
+<text x="2705" y="1104" font-size="14" >NN</text>
+<polyline points="2280,1138 2840,1138" class="line" />
+<text x="2295" y="1161" font-size="15" >No additional UNIQUE constraint</text>
+<rect x="2280" y="1645" width="560" height="247" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="2280,1694 2840,1694" class="line" />
+<text x="2298" y="1677" font-size="25" font-weight="bold">login_throttle</text>
+<text x="2297" y="1728" font-size="18" class="key">key_hash</text>
+<text x="2595" y="1728" font-size="16" font-family="monospace">TEXT</text>
+<text x="2705" y="1728" font-size="14" >PK</text>
+<text x="2297" y="1756" font-size="18" class="mono">attempts</text>
+<text x="2595" y="1756" font-size="16" font-family="monospace">INTEGER</text>
+<text x="2705" y="1756" font-size="14" >NN</text>
+<text x="2297" y="1784" font-size="18" class="mono">reset_at</text>
+<text x="2595" y="1784" font-size="16" font-family="monospace">INTEGER</text>
+<text x="2705" y="1784" font-size="14" >NN</text>
+<polyline points="2280,1818 2840,1818" class="line" />
+<text x="2295" y="1841" font-size="15" >No additional UNIQUE constraint</text>
+<rect x="1550" y="2325" width="560" height="275" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="1550,2374 2110,2374" class="line" />
+<text x="1568" y="2357" font-size="25" font-weight="bold">attendance</text>
+<text x="1567" y="2408" font-size="18" class="key">attendance_id</text>
+<text x="1865" y="2408" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1975" y="2408" font-size="14" >PK</text>
+<text x="1567" y="2436" font-size="18" class="mono">enrollment_id</text>
+<text x="1865" y="2436" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1975" y="2436" font-size="14" >FK 0 NN</text>
+<text x="1567" y="2464" font-size="18" class="mono">date</text>
+<text x="1865" y="2464" font-size="16" font-family="monospace">TEXT</text>
+<text x="1975" y="2464" font-size="14" >NN</text>
+<text x="1567" y="2492" font-size="18" class="mono">status</text>
+<text x="1865" y="2492" font-size="16" font-family="monospace">TEXT</text>
+<text x="1975" y="2492" font-size="14" >NN</text>
+<polyline points="1550,2526 2110,2526" class="line" />
+<text x="1565" y="2549" font-size="15" >UQ (enrollment_id, date)</text>
+<rect x="90" y="2325" width="560" height="303" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="90,2374 650,2374" class="line" />
+<text x="108" y="2357" font-size="25" font-weight="bold">library_book</text>
+<text x="107" y="2408" font-size="18" class="key">book_id</text>
+<text x="405" y="2408" font-size="16" font-family="monospace">INTEGER</text>
+<text x="515" y="2408" font-size="14" >PK</text>
+<text x="107" y="2436" font-size="18" class="mono">isbn</text>
+<text x="405" y="2436" font-size="16" font-family="monospace">TEXT</text>
+<text x="515" y="2436" font-size="14" >UQ NN</text>
+<text x="107" y="2464" font-size="18" class="mono">title</text>
+<text x="405" y="2464" font-size="16" font-family="monospace">TEXT</text>
+<text x="515" y="2464" font-size="14" >NN</text>
+<text x="107" y="2492" font-size="18" class="mono">author</text>
+<text x="405" y="2492" font-size="16" font-family="monospace">TEXT</text>
+<text x="515" y="2492" font-size="14" >NN</text>
+<text x="107" y="2520" font-size="18" class="mono">copies</text>
+<text x="405" y="2520" font-size="16" font-family="monospace">INTEGER</text>
+<text x="515" y="2520" font-size="14" >NN</text>
+<polyline points="90,2554 650,2554" class="line" />
+<text x="105" y="2577" font-size="15" >UQ (isbn)</text>
+<rect x="820" y="2325" width="560" height="331" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="820,2374 1380,2374" class="line" />
+<text x="838" y="2357" font-size="25" font-weight="bold">library_loan</text>
+<text x="837" y="2408" font-size="18" class="key">loan_id</text>
+<text x="1135" y="2408" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1245" y="2408" font-size="14" >PK</text>
+<text x="837" y="2436" font-size="18" class="mono">student_id</text>
+<text x="1135" y="2436" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1245" y="2436" font-size="14" >FK 1 NN</text>
+<text x="837" y="2464" font-size="18" class="mono">book_id</text>
+<text x="1135" y="2464" font-size="16" font-family="monospace">INTEGER</text>
+<text x="1245" y="2464" font-size="14" >FK 0 NN</text>
+<text x="837" y="2492" font-size="18" class="mono">borrowed_date</text>
+<text x="1135" y="2492" font-size="16" font-family="monospace">TEXT</text>
+<text x="1245" y="2492" font-size="14" >NN</text>
+<text x="837" y="2520" font-size="18" class="mono">due_date</text>
+<text x="1135" y="2520" font-size="16" font-family="monospace">TEXT</text>
+<text x="1245" y="2520" font-size="14" >NN</text>
+<text x="837" y="2548" font-size="18" class="mono">returned_date</text>
+<text x="1135" y="2548" font-size="16" font-family="monospace">TEXT</text>
+<text x="1245" y="2548" font-size="14" >?</text>
+<polyline points="820,2582 1380,2582" class="line" />
+<text x="835" y="2605" font-size="15" >No additional UNIQUE constraint</text>
+<rect x="2280" y="2325" width="560" height="191" fill="white" stroke="#111" stroke-width="2" />
+<polyline points="2280,2374 2840,2374" class="line" />
+<text x="2298" y="2357" font-size="25" font-weight="bold">portal_migration</text>
+<text x="2297" y="2408" font-size="18" class="key">name</text>
+<text x="2595" y="2408" font-size="16" font-family="monospace">TEXT</text>
+<text x="2705" y="2408" font-size="14" >PK</text>
+<polyline points="2280,2442 2840,2442" class="line" />
+<text x="2295" y="2465" font-size="15" >No additional UNIQUE constraint</text>
+<text x="90" y="3035" font-size="23" font-weight="bold">FOREIGN-KEY RELATIONSHIP REGISTER</text>
+<text x="90" y="3070" font-size="17" >0  student.department_id → department.department_id   [0..1 ; 0..N]</text>
+<text x="90" y="3100" font-size="17" >0  faculty.department_id → department.department_id   [1..1 ; 0..N]</text>
+<text x="90" y="3130" font-size="17" >0  course.department_id → department.department_id   [1..1 ; 0..N]</text>
+<text x="90" y="3160" font-size="17" >0  course_offering.semester_id → semester.semester_id   [1..1 ; 0..N]</text>
+<text x="90" y="3190" font-size="17" >1  course_offering.course_id → course.course_id   [1..1 ; 0..N]</text>
+<text x="90" y="3220" font-size="17" >0  faculty_assignment.offering_id → course_offering.offering_id   [1..1 ; 0..N]</text>
+<text x="90" y="3250" font-size="17" >1  faculty_assignment.faculty_id → faculty.faculty_id   [1..1 ; 0..N]</text>
+<text x="90" y="3280" font-size="17" >0  enrollment.offering_id → course_offering.offering_id   [1..1 ; 0..N]</text>
+<text x="1530" y="3070" font-size="17" >1  enrollment.student_id → student.student_id   [1..1 ; 0..N]</text>
+<text x="1530" y="3100" font-size="17" >0  grade.enrollment_id → enrollment.enrollment_id   [1..1 ; 0..1]</text>
+<text x="1530" y="3130" font-size="17" >0  portal_account.student_id → student.student_id   [0..1 ; 0..1]</text>
+<text x="1530" y="3160" font-size="17" >0  portal_session.account_id → portal_account.account_id   [1..1 ; 0..N]</text>
+<text x="1530" y="3190" font-size="17" >0  attendance.enrollment_id → enrollment.enrollment_id   [1..1 ; 0..N]</text>
+<text x="1530" y="3220" font-size="17" >0  library_loan.book_id → library_book.book_id   [1..1 ; 0..N]</text>
+<text x="1530" y="3250" font-size="17" >1  library_loan.student_id → student.student_id   [1..1 ; 0..N]</text>
+<text x="90" y="3340" font-size="18" >All FK deletes RESTRICT except portal_session.account_id CASCADE. Academic FK updates CASCADE; extension FK updates default NO ACTION.</text>
+<text x="90" y="3375" font-size="18" >portal_account: role ∈ {admin, student}; admin ⇒ student_id NULL; student ⇒ student_id NOT NULL. student_id is UNIQUE; no faculty FK.</text>
+<text x="90" y="3410" font-size="18" >login_throttle and portal_migration have no FKs. SQL CHECKs, defaults, nullable TEXT primary-key caveat and application rules: see Portal_ER.md and schema JSON.</text>
+<text x="90" y="3445" font-size="18" >Sources: web/lib/schema.mjs + web/lib/portal.mjs • Editable SVG + reproducible generator • Original nine-table ER assets retained as historical.</text>
+</svg>

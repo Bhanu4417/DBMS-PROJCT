@@ -1,0 +1,1061 @@
+[
+  {
+    "name": "department",
+    "sql": "CREATE TABLE department (\n    department_id   INTEGER PRIMARY KEY AUTOINCREMENT,\n    department_code VARCHAR(10)  NOT NULL,\n    department_name VARCHAR(100) NOT NULL,\n    office_location VARCHAR(100),\n    created_at      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    CONSTRAINT uq_department_code UNIQUE (department_code),\n    CONSTRAINT uq_department_name UNIQUE (department_name),\n    CONSTRAINT ck_department_code_format CHECK (regexp('^[A-Z]{2,10}$', department_code))\n)",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "department_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "department_code",
+        "type": "VARCHAR(10)",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "department_name",
+        "type": "VARCHAR(100)",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "office_location",
+        "type": "VARCHAR(100)",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "notnull": 1,
+        "dflt_value": "CURRENT_TIMESTAMP",
+        "pk": 0
+      }
+    ],
+    "fks": [],
+    "unique": [
+      [
+        "department_name"
+      ],
+      [
+        "department_code"
+      ]
+    ]
+  },
+  {
+    "name": "student",
+    "sql": "CREATE TABLE student (\n    student_id        INTEGER PRIMARY KEY AUTOINCREMENT,\n    enrollment_number VARCHAR(30) NOT NULL,\n    first_name        VARCHAR(50) NOT NULL,\n    last_name         VARCHAR(50) NOT NULL,\n    email             VARCHAR(150) NOT NULL,\n    phone             VARCHAR(15),\n    date_of_birth     DATE,\n    gender            VARCHAR(20),\n    admission_year    INTEGER     NOT NULL,\n    department_id     INTEGER,\n    status            VARCHAR(20) NOT NULL DEFAULT 'Active',\n    created_at        TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    CONSTRAINT uq_student_enrollment_number UNIQUE (enrollment_number),\n    CONSTRAINT uq_student_email UNIQUE (email),\n    CONSTRAINT fk_student_department FOREIGN KEY (department_id)\n        REFERENCES department (department_id) ON DELETE RESTRICT ON UPDATE CASCADE,\n    CONSTRAINT ck_student_admission_year CHECK (admission_year BETWEEN 2000 AND 2100),\n    CONSTRAINT ck_student_status CHECK (status IN ('Active', 'Graduated', 'Inactive')),\n    CONSTRAINT ck_student_gender CHECK (\n        gender IS NULL OR gender IN ('Female', 'Male', 'Non-binary', 'Prefer not to say')),\n    CONSTRAINT ck_student_email_format CHECK (regexp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$', email)),\n    CONSTRAINT ck_student_phone_format CHECK (phone IS NULL OR regexp('^[0-9+ -]{7,15}$', phone))\n)",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "student_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "enrollment_number",
+        "type": "VARCHAR(30)",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "first_name",
+        "type": "VARCHAR(50)",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "last_name",
+        "type": "VARCHAR(50)",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "email",
+        "type": "VARCHAR(150)",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "phone",
+        "type": "VARCHAR(15)",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 6,
+        "name": "date_of_birth",
+        "type": "DATE",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 7,
+        "name": "gender",
+        "type": "VARCHAR(20)",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 8,
+        "name": "admission_year",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 9,
+        "name": "department_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 10,
+        "name": "status",
+        "type": "VARCHAR(20)",
+        "notnull": 1,
+        "dflt_value": "'Active'",
+        "pk": 0
+      },
+      {
+        "cid": 11,
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "notnull": 1,
+        "dflt_value": "CURRENT_TIMESTAMP",
+        "pk": 0
+      }
+    ],
+    "fks": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "department",
+        "from": "department_id",
+        "to": "department_id",
+        "on_update": "CASCADE",
+        "on_delete": "RESTRICT",
+        "match": "NONE"
+      }
+    ],
+    "unique": [
+      [
+        "email"
+      ],
+      [
+        "enrollment_number"
+      ]
+    ]
+  },
+  {
+    "name": "faculty",
+    "sql": "CREATE TABLE faculty (\n    faculty_id    INTEGER PRIMARY KEY AUTOINCREMENT,\n    employee_code VARCHAR(30)  NOT NULL,\n    first_name    VARCHAR(50)  NOT NULL,\n    last_name     VARCHAR(50)  NOT NULL,\n    email         VARCHAR(150) NOT NULL,\n    phone         VARCHAR(15),\n    designation   VARCHAR(100),\n    joining_date  DATE,\n    department_id INTEGER      NOT NULL,\n    created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    CONSTRAINT uq_faculty_employee_code UNIQUE (employee_code),\n    CONSTRAINT uq_faculty_email UNIQUE (email),\n    CONSTRAINT fk_faculty_department FOREIGN KEY (department_id)\n        REFERENCES department (department_id) ON DELETE RESTRICT ON UPDATE CASCADE,\n    CONSTRAINT ck_faculty_email_format CHECK (regexp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$', email)),\n    CONSTRAINT ck_faculty_phone_format CHECK (phone IS NULL OR regexp('^[0-9+ -]{7,15}$', phone)),\n    CONSTRAINT ck_faculty_joining_date CHECK (joining_date IS NULL OR joining_date >= '1950-01-01')\n)",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "faculty_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "employee_code",
+        "type": "VARCHAR(30)",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "first_name",
+        "type": "VARCHAR(50)",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "last_name",
+        "type": "VARCHAR(50)",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "email",
+        "type": "VARCHAR(150)",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "phone",
+        "type": "VARCHAR(15)",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 6,
+        "name": "designation",
+        "type": "VARCHAR(100)",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 7,
+        "name": "joining_date",
+        "type": "DATE",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 8,
+        "name": "department_id",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 9,
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "notnull": 1,
+        "dflt_value": "CURRENT_TIMESTAMP",
+        "pk": 0
+      }
+    ],
+    "fks": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "department",
+        "from": "department_id",
+        "to": "department_id",
+        "on_update": "CASCADE",
+        "on_delete": "RESTRICT",
+        "match": "NONE"
+      }
+    ],
+    "unique": [
+      [
+        "email"
+      ],
+      [
+        "employee_code"
+      ]
+    ]
+  },
+  {
+    "name": "course",
+    "sql": "CREATE TABLE course (\n    course_id     INTEGER PRIMARY KEY AUTOINCREMENT,\n    course_code   VARCHAR(20)  NOT NULL,\n    course_name   VARCHAR(150) NOT NULL,\n    credits       INTEGER      NOT NULL,\n    department_id INTEGER      NOT NULL,\n    description   TEXT,\n    CONSTRAINT uq_course_code UNIQUE (course_code),\n    CONSTRAINT fk_course_department FOREIGN KEY (department_id)\n        REFERENCES department (department_id) ON DELETE RESTRICT ON UPDATE CASCADE,\n    CONSTRAINT ck_course_credits CHECK (credits BETWEEN 1 AND 6),\n    CONSTRAINT ck_course_code_format CHECK (regexp('^[A-Z]{2,6}-?[0-9]{3,4}$', course_code))\n)",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "course_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "course_code",
+        "type": "VARCHAR(20)",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "course_name",
+        "type": "VARCHAR(150)",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "credits",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "department_id",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "description",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      }
+    ],
+    "fks": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "department",
+        "from": "department_id",
+        "to": "department_id",
+        "on_update": "CASCADE",
+        "on_delete": "RESTRICT",
+        "match": "NONE"
+      }
+    ],
+    "unique": [
+      [
+        "course_code"
+      ]
+    ]
+  },
+  {
+    "name": "semester",
+    "sql": "CREATE TABLE semester (\n    semester_id   INTEGER PRIMARY KEY AUTOINCREMENT,\n    semester_name VARCHAR(50) NOT NULL,\n    academic_year VARCHAR(9)  NOT NULL,\n    start_date    DATE        NOT NULL,\n    end_date      DATE        NOT NULL,\n    status        VARCHAR(20) NOT NULL DEFAULT 'Upcoming',\n    CONSTRAINT uq_semester_term UNIQUE (semester_name, academic_year),\n    CONSTRAINT ck_semester_status CHECK (status IN ('Upcoming', 'Active', 'Completed')),\n    CONSTRAINT ck_semester_dates CHECK (end_date > start_date),\n    CONSTRAINT ck_semester_academic_year CHECK (regexp('^[0-9]{4}-[0-9]{4}$', academic_year))\n)",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "semester_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "semester_name",
+        "type": "VARCHAR(50)",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "academic_year",
+        "type": "VARCHAR(9)",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "start_date",
+        "type": "DATE",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "end_date",
+        "type": "DATE",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "status",
+        "type": "VARCHAR(20)",
+        "notnull": 1,
+        "dflt_value": "'Upcoming'",
+        "pk": 0
+      }
+    ],
+    "fks": [],
+    "unique": [
+      [
+        "semester_name",
+        "academic_year"
+      ]
+    ]
+  },
+  {
+    "name": "course_offering",
+    "sql": "CREATE TABLE course_offering (\n    offering_id INTEGER PRIMARY KEY AUTOINCREMENT,\n    course_id   INTEGER   NOT NULL,\n    semester_id INTEGER   NOT NULL,\n    section     VARCHAR(20) NOT NULL,\n    capacity    INTEGER   NOT NULL,\n    created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    CONSTRAINT uq_offering_course_semester_section UNIQUE (course_id, semester_id, section),\n    CONSTRAINT fk_offering_course FOREIGN KEY (course_id)\n        REFERENCES course (course_id) ON DELETE RESTRICT ON UPDATE CASCADE,\n    CONSTRAINT fk_offering_semester FOREIGN KEY (semester_id)\n        REFERENCES semester (semester_id) ON DELETE RESTRICT ON UPDATE CASCADE,\n    CONSTRAINT ck_offering_capacity CHECK (capacity > 0)\n)",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "offering_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "course_id",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "semester_id",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "section",
+        "type": "VARCHAR(20)",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "capacity",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "notnull": 1,
+        "dflt_value": "CURRENT_TIMESTAMP",
+        "pk": 0
+      }
+    ],
+    "fks": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "semester",
+        "from": "semester_id",
+        "to": "semester_id",
+        "on_update": "CASCADE",
+        "on_delete": "RESTRICT",
+        "match": "NONE"
+      },
+      {
+        "id": 1,
+        "seq": 0,
+        "table": "course",
+        "from": "course_id",
+        "to": "course_id",
+        "on_update": "CASCADE",
+        "on_delete": "RESTRICT",
+        "match": "NONE"
+      }
+    ],
+    "unique": [
+      [
+        "course_id",
+        "semester_id",
+        "section"
+      ]
+    ]
+  },
+  {
+    "name": "faculty_assignment",
+    "sql": "CREATE TABLE faculty_assignment (\n    assignment_id INTEGER PRIMARY KEY AUTOINCREMENT,\n    faculty_id    INTEGER   NOT NULL,\n    offering_id   INTEGER   NOT NULL,\n    assigned_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    CONSTRAINT uq_assignment_faculty_offering UNIQUE (faculty_id, offering_id),\n    CONSTRAINT fk_assignment_faculty FOREIGN KEY (faculty_id)\n        REFERENCES faculty (faculty_id) ON DELETE RESTRICT ON UPDATE CASCADE,\n    CONSTRAINT fk_assignment_offering FOREIGN KEY (offering_id)\n        REFERENCES course_offering (offering_id) ON DELETE RESTRICT ON UPDATE CASCADE\n)",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "assignment_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "faculty_id",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "offering_id",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "assigned_at",
+        "type": "TIMESTAMP",
+        "notnull": 1,
+        "dflt_value": "CURRENT_TIMESTAMP",
+        "pk": 0
+      }
+    ],
+    "fks": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "course_offering",
+        "from": "offering_id",
+        "to": "offering_id",
+        "on_update": "CASCADE",
+        "on_delete": "RESTRICT",
+        "match": "NONE"
+      },
+      {
+        "id": 1,
+        "seq": 0,
+        "table": "faculty",
+        "from": "faculty_id",
+        "to": "faculty_id",
+        "on_update": "CASCADE",
+        "on_delete": "RESTRICT",
+        "match": "NONE"
+      }
+    ],
+    "unique": [
+      [
+        "faculty_id",
+        "offering_id"
+      ]
+    ]
+  },
+  {
+    "name": "enrollment",
+    "sql": "CREATE TABLE enrollment (\n    enrollment_id     INTEGER PRIMARY KEY AUTOINCREMENT,\n    student_id        INTEGER   NOT NULL,\n    offering_id       INTEGER   NOT NULL,\n    enrollment_date   DATE      NOT NULL DEFAULT CURRENT_DATE,\n    enrollment_status VARCHAR(20) NOT NULL DEFAULT 'Enrolled',\n    CONSTRAINT uq_enrollment_student_offering UNIQUE (student_id, offering_id),\n    CONSTRAINT fk_enrollment_student FOREIGN KEY (student_id)\n        REFERENCES student (student_id) ON DELETE RESTRICT ON UPDATE CASCADE,\n    CONSTRAINT fk_enrollment_offering FOREIGN KEY (offering_id)\n        REFERENCES course_offering (offering_id) ON DELETE RESTRICT ON UPDATE CASCADE,\n    CONSTRAINT ck_enrollment_status CHECK (enrollment_status IN ('Enrolled', 'Completed', 'Dropped'))\n)",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "enrollment_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "student_id",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "offering_id",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "enrollment_date",
+        "type": "DATE",
+        "notnull": 1,
+        "dflt_value": "CURRENT_DATE",
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "enrollment_status",
+        "type": "VARCHAR(20)",
+        "notnull": 1,
+        "dflt_value": "'Enrolled'",
+        "pk": 0
+      }
+    ],
+    "fks": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "course_offering",
+        "from": "offering_id",
+        "to": "offering_id",
+        "on_update": "CASCADE",
+        "on_delete": "RESTRICT",
+        "match": "NONE"
+      },
+      {
+        "id": 1,
+        "seq": 0,
+        "table": "student",
+        "from": "student_id",
+        "to": "student_id",
+        "on_update": "CASCADE",
+        "on_delete": "RESTRICT",
+        "match": "NONE"
+      }
+    ],
+    "unique": [
+      [
+        "student_id",
+        "offering_id"
+      ]
+    ]
+  },
+  {
+    "name": "grade",
+    "sql": "CREATE TABLE grade (\n    grade_id      INTEGER PRIMARY KEY AUTOINCREMENT,\n    enrollment_id INTEGER      NOT NULL,\n    marks_obtained REAL,\n    max_marks     REAL NOT NULL,\n    grade_letter  VARCHAR(2),\n    updated_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    CONSTRAINT uq_grade_enrollment UNIQUE (enrollment_id),\n    CONSTRAINT fk_grade_enrollment FOREIGN KEY (enrollment_id)\n        REFERENCES enrollment (enrollment_id) ON DELETE RESTRICT ON UPDATE CASCADE,\n    CONSTRAINT ck_grade_marks_non_negative CHECK (marks_obtained IS NULL OR marks_obtained >= 0),\n    CONSTRAINT ck_grade_max_positive CHECK (max_marks > 0),\n    CONSTRAINT ck_grade_marks_within_max CHECK (marks_obtained IS NULL OR marks_obtained <= max_marks),\n    CONSTRAINT ck_grade_letter CHECK (\n        grade_letter IS NULL OR grade_letter IN ('A+', 'A', 'B+', 'B', 'C', 'D', 'F'))\n)",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "grade_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "enrollment_id",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "marks_obtained",
+        "type": "REAL",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "max_marks",
+        "type": "REAL",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "grade_letter",
+        "type": "VARCHAR(2)",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "updated_at",
+        "type": "TIMESTAMP",
+        "notnull": 1,
+        "dflt_value": "CURRENT_TIMESTAMP",
+        "pk": 0
+      }
+    ],
+    "fks": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "enrollment",
+        "from": "enrollment_id",
+        "to": "enrollment_id",
+        "on_update": "CASCADE",
+        "on_delete": "RESTRICT",
+        "match": "NONE"
+      }
+    ],
+    "unique": [
+      [
+        "enrollment_id"
+      ]
+    ]
+  },
+  {
+    "name": "portal_account",
+    "sql": "CREATE TABLE portal_account (\n      account_id INTEGER PRIMARY KEY, email TEXT NOT NULL COLLATE NOCASE UNIQUE,\n      role TEXT NOT NULL CHECK(role IN ('admin','student')),\n      student_id INTEGER UNIQUE REFERENCES student(student_id) ON DELETE RESTRICT,\n      password_salt TEXT NOT NULL, password_hash TEXT NOT NULL,\n      CHECK ((role='admin' AND student_id IS NULL) OR (role='student' AND student_id IS NOT NULL))\n    )",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "account_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "email",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "role",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "student_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "password_salt",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "password_hash",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      }
+    ],
+    "fks": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "student",
+        "from": "student_id",
+        "to": "student_id",
+        "on_update": "NO ACTION",
+        "on_delete": "RESTRICT",
+        "match": "NONE"
+      }
+    ],
+    "unique": [
+      [
+        "student_id"
+      ],
+      [
+        "email"
+      ]
+    ]
+  },
+  {
+    "name": "portal_session",
+    "sql": "CREATE TABLE portal_session (\n      token_hash TEXT PRIMARY KEY, account_id INTEGER NOT NULL REFERENCES portal_account(account_id) ON DELETE CASCADE,\n      expires_at INTEGER NOT NULL\n    )",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "token_hash",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "account_id",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "expires_at",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      }
+    ],
+    "fks": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "portal_account",
+        "from": "account_id",
+        "to": "account_id",
+        "on_update": "NO ACTION",
+        "on_delete": "CASCADE",
+        "match": "NONE"
+      }
+    ],
+    "unique": []
+  },
+  {
+    "name": "login_throttle",
+    "sql": "CREATE TABLE login_throttle (key_hash TEXT PRIMARY KEY, attempts INTEGER NOT NULL, reset_at INTEGER NOT NULL)",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "key_hash",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "attempts",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "reset_at",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      }
+    ],
+    "fks": [],
+    "unique": []
+  },
+  {
+    "name": "attendance",
+    "sql": "CREATE TABLE attendance (\n      attendance_id INTEGER PRIMARY KEY, enrollment_id INTEGER NOT NULL REFERENCES enrollment(enrollment_id) ON DELETE RESTRICT,\n      date TEXT NOT NULL, status TEXT NOT NULL CHECK(status IN ('Present','Absent','Late','Excused')),\n      UNIQUE(enrollment_id,date)\n    )",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "attendance_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "enrollment_id",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "date",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "status",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      }
+    ],
+    "fks": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "enrollment",
+        "from": "enrollment_id",
+        "to": "enrollment_id",
+        "on_update": "NO ACTION",
+        "on_delete": "RESTRICT",
+        "match": "NONE"
+      }
+    ],
+    "unique": [
+      [
+        "enrollment_id",
+        "date"
+      ]
+    ]
+  },
+  {
+    "name": "library_book",
+    "sql": "CREATE TABLE library_book (\n      book_id INTEGER PRIMARY KEY, isbn TEXT NOT NULL UNIQUE, title TEXT NOT NULL, author TEXT NOT NULL,\n      copies INTEGER NOT NULL CHECK(copies > 0)\n    )",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "book_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "isbn",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "title",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "author",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "copies",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      }
+    ],
+    "fks": [],
+    "unique": [
+      [
+        "isbn"
+      ]
+    ]
+  },
+  {
+    "name": "library_loan",
+    "sql": "CREATE TABLE library_loan (\n      loan_id INTEGER PRIMARY KEY, student_id INTEGER NOT NULL REFERENCES student(student_id) ON DELETE RESTRICT,\n      book_id INTEGER NOT NULL REFERENCES library_book(book_id) ON DELETE RESTRICT,\n      borrowed_date TEXT NOT NULL, due_date TEXT NOT NULL, returned_date TEXT,\n      CHECK(due_date >= borrowed_date), CHECK(returned_date IS NULL OR returned_date >= borrowed_date)\n    )",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "loan_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "student_id",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "book_id",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "borrowed_date",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "due_date",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "returned_date",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      }
+    ],
+    "fks": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "library_book",
+        "from": "book_id",
+        "to": "book_id",
+        "on_update": "NO ACTION",
+        "on_delete": "RESTRICT",
+        "match": "NONE"
+      },
+      {
+        "id": 1,
+        "seq": 0,
+        "table": "student",
+        "from": "student_id",
+        "to": "student_id",
+        "on_update": "NO ACTION",
+        "on_delete": "RESTRICT",
+        "match": "NONE"
+      }
+    ],
+    "unique": []
+  },
+  {
+    "name": "portal_migration",
+    "sql": "CREATE TABLE portal_migration (name TEXT PRIMARY KEY)",
+    "columns": [
+      {
+        "cid": 0,
+        "name": "name",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      }
+    ],
+    "fks": [],
+    "unique": []
+  }
+]

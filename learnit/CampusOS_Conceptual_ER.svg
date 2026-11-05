@@ -1,0 +1,265 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2700" height="3070" viewBox="0 0 2700 3070" role="img" aria-labelledby="title desc"><title id="title">CampusOS | Conceptual domain ER</title><desc id="desc">CURRENT EXTENDED MODEL  /  12 domain entities  /  Chen-inspired notation  /  Authentication is separated in the relational plate</desc><style>text{font-family:Arial,Helvetica,sans-serif;fill:#111} .line{fill:none;stroke:#222;stroke-width:2} .key{text-decoration:underline;font-weight:bold} .small{font-size:17px} .body{font-size:20px} .mono{font-family:monospace;font-size:18px}</style><rect width="100%" height="100%" fill="white"/>
+<text x="65" y="65" font-size="36" font-weight="bold">CampusOS | Conceptual domain ER</text>
+<text x="65" y="105" font-size="19" >CURRENT EXTENDED MODEL  /  12 domain entities  /  Chen-inspired notation  /  Authentication is separated in the relational plate</text>
+<text x="65" y="148" font-size="17" >Underlined ellipse = primary key   •   Edge labels = min..max related rows per entity at that endpoint   •   Selected attributes shown; full schema in relational plate</text>
+<polyline points="500,1818 75,1818 75,195 1320,195 1320,418" class="line" />
+<polygon points="-4,1090 75,1048 154,1090 75,1132" fill="white" stroke="#111" stroke-width="2"/>
+<text x="75" y="1084" font-size="16" text-anchor="middle">belongs</text>
+<text x="75" y="1102" font-size="16" text-anchor="middle">to</text>
+<text x="512" y="1803" font-size="17" >0..1</text>
+<text x="1332" y="453" font-size="17" >0..N</text>
+<polyline points="645,450 1175,450" class="line" />
+<polygon points="831,450 910,408 989,450 910,492" fill="white" stroke="#111" stroke-width="2"/>
+<text x="910" y="444" font-size="16" text-anchor="middle">belongs</text>
+<text x="910" y="462" font-size="16" text-anchor="middle">to</text>
+<text x="657" y="435" font-size="17" >1..1</text>
+<text x="1187" y="435" font-size="17" >0..N</text>
+<polyline points="1995,450 1465,450" class="line" />
+<polygon points="1651,450 1730,408 1809,450 1730,492" fill="white" stroke="#111" stroke-width="2"/>
+<text x="1730" y="444" font-size="16" text-anchor="middle">offers</text>
+<text x="2007" y="435" font-size="17" >1..1</text>
+<text x="1477" y="435" font-size="17" >0..N</text>
+<polyline points="1465,1150 1995,1150" class="line" />
+<polygon points="1651,1150 1730,1108 1809,1150 1730,1192" fill="white" stroke="#111" stroke-width="2"/>
+<text x="1730" y="1144" font-size="16" text-anchor="middle">scheduled</text>
+<text x="1730" y="1162" font-size="16" text-anchor="middle">in</text>
+<text x="1477" y="1135" font-size="17" >1..1</text>
+<text x="2007" y="1135" font-size="17" >0..N</text>
+<polyline points="1465,1150 1995,450" class="line" />
+<polygon points="1651,800 1730,758 1809,800 1730,842" fill="white" stroke="#111" stroke-width="2"/>
+<text x="1730" y="794" font-size="16" text-anchor="middle">instance</text>
+<text x="1730" y="812" font-size="16" text-anchor="middle">of</text>
+<text x="1477" y="1135" font-size="17" >1..1</text>
+<text x="2007" y="485" font-size="17" >0..N</text>
+<polyline points="645,1150 1175,1150" class="line" />
+<polygon points="831,1150 910,1108 989,1150 910,1192" fill="white" stroke="#111" stroke-width="2"/>
+<text x="910" y="1144" font-size="16" text-anchor="middle">staffed</text>
+<text x="910" y="1162" font-size="16" text-anchor="middle">via</text>
+<text x="657" y="1135" font-size="17" >1..1</text>
+<text x="1187" y="1135" font-size="17" >0..N</text>
+<polyline points="500,1118 500,482" class="line" />
+<polygon points="421,800 500,758 579,800 500,842" fill="white" stroke="#111" stroke-width="2"/>
+<text x="500" y="794" font-size="16" text-anchor="middle">assigned</text>
+<text x="500" y="812" font-size="16" text-anchor="middle">via</text>
+<text x="512" y="1103" font-size="17" >1..1</text>
+<text x="512" y="517" font-size="17" >0..N</text>
+<polyline points="1320,1818 1320,1182" class="line" />
+<polygon points="1241,1500 1320,1458 1399,1500 1320,1542" fill="white" stroke="#111" stroke-width="2"/>
+<text x="1320" y="1494" font-size="16" text-anchor="middle">receives</text>
+<text x="1332" y="1803" font-size="17" >1..1</text>
+<text x="1332" y="1217" font-size="17" >0..N</text>
+<polyline points="1175,1850 645,1850" class="line" />
+<polygon points="831,1850 910,1808 989,1850 910,1892" fill="white" stroke="#111" stroke-width="2"/>
+<text x="910" y="1844" font-size="16" text-anchor="middle">registers</text>
+<text x="1187" y="1835" font-size="17" >1..1</text>
+<text x="657" y="1835" font-size="17" >0..N</text>
+<polyline points="1995,1850 1465,1850" class="line" />
+<polygon points="1651,1850 1730,1808 1809,1850 1730,1892" fill="white" stroke="#111" stroke-width="2"/>
+<text x="1730" y="1844" font-size="16" text-anchor="middle">assessed</text>
+<text x="1730" y="1862" font-size="16" text-anchor="middle">by</text>
+<text x="2007" y="1835" font-size="17" >1..1</text>
+<text x="1477" y="1835" font-size="17" >0..1</text>
+<polyline points="1995,2550 1465,1850" class="line" />
+<polygon points="1651,2200 1730,2158 1809,2200 1730,2242" fill="white" stroke="#111" stroke-width="2"/>
+<text x="1730" y="2194" font-size="16" text-anchor="middle">records</text>
+<text x="2007" y="2535" font-size="17" >1..1</text>
+<text x="1477" y="1885" font-size="17" >0..N</text>
+<polyline points="1175,2550 645,2550" class="line" />
+<polygon points="831,2550 910,2508 989,2550 910,2592" fill="white" stroke="#111" stroke-width="2"/>
+<text x="910" y="2544" font-size="16" text-anchor="middle">loaned</text>
+<text x="910" y="2562" font-size="16" text-anchor="middle">via</text>
+<text x="1187" y="2535" font-size="17" >1..1</text>
+<text x="657" y="2535" font-size="17" >0..N</text>
+<polyline points="1320,2582 1320,2810 95,2810 95,1940 500,1940 500,1882" class="line" />
+<polygon points="1241,2770 1320,2728 1399,2770 1320,2812" fill="white" stroke="#111" stroke-width="2"/>
+<text x="1320" y="2764" font-size="16" text-anchor="middle">borrows</text>
+<text x="1320" y="2782" font-size="16" text-anchor="middle">via</text>
+<text x="1332" y="2567" font-size="17" >1..1</text>
+<text x="512" y="1917" font-size="17" >0..N</text>
+<polyline points="500,450 500,268" class="line" />
+<ellipse cx="500" cy="268" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="500" y="274" font-size="18" text-anchor="middle" class="key">faculty_id</text>
+<polyline points="500,450 335,345" class="line" />
+<ellipse cx="335" cy="345" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="335" y="351" font-size="18" text-anchor="middle" >employee_code</text>
+<polyline points="500,450 665,345" class="line" />
+<ellipse cx="665" cy="345" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="665" y="351" font-size="18" text-anchor="middle" >first_name</text>
+<polyline points="500,450 335,565" class="line" />
+<ellipse cx="335" cy="565" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="335" y="571" font-size="18" text-anchor="middle" >last_name</text>
+<polyline points="500,450 665,565" class="line" />
+<ellipse cx="665" cy="565" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="665" y="571" font-size="18" text-anchor="middle" >email</text>
+<polyline points="500,450 500,640" class="line" />
+<ellipse cx="500" cy="640" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="500" y="646" font-size="18" text-anchor="middle" >designation</text>
+<rect x="355" y="418" width="290" height="64" fill="white" stroke="#111" stroke-width="2" />
+<text x="500" y="457" font-size="23" text-anchor="middle" font-weight="bold">faculty</text>
+<polyline points="1320,450 1320,268" class="line" />
+<ellipse cx="1320" cy="268" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1320" y="274" font-size="18" text-anchor="middle" class="key">department_id</text>
+<polyline points="1320,450 1155,345" class="line" />
+<ellipse cx="1155" cy="345" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1155" y="351" font-size="18" text-anchor="middle" >department_code</text>
+<polyline points="1320,450 1485,345" class="line" />
+<ellipse cx="1485" cy="345" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1485" y="351" font-size="18" text-anchor="middle" >department_name</text>
+<polyline points="1320,450 1155,565" class="line" />
+<ellipse cx="1155" cy="565" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1155" y="571" font-size="18" text-anchor="middle" >office_location</text>
+<rect x="1175" y="418" width="290" height="64" fill="white" stroke="#111" stroke-width="2" />
+<text x="1320" y="457" font-size="23" text-anchor="middle" font-weight="bold">department</text>
+<polyline points="2140,450 2140,268" class="line" />
+<ellipse cx="2140" cy="268" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="2140" y="274" font-size="18" text-anchor="middle" class="key">course_id</text>
+<polyline points="2140,450 1975,345" class="line" />
+<ellipse cx="1975" cy="345" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1975" y="351" font-size="18" text-anchor="middle" >course_code</text>
+<polyline points="2140,450 2305,345" class="line" />
+<ellipse cx="2305" cy="345" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="2305" y="351" font-size="18" text-anchor="middle" >course_name</text>
+<polyline points="2140,450 1975,565" class="line" />
+<ellipse cx="1975" cy="565" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1975" y="571" font-size="18" text-anchor="middle" >credits</text>
+<polyline points="2140,450 2305,565" class="line" />
+<ellipse cx="2305" cy="565" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="2305" y="571" font-size="18" text-anchor="middle" >description</text>
+<rect x="1995" y="418" width="290" height="64" fill="white" stroke="#111" stroke-width="2" />
+<text x="2140" y="457" font-size="23" text-anchor="middle" font-weight="bold">course</text>
+<polyline points="500,1150 500,968" class="line" />
+<ellipse cx="500" cy="968" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="500" y="974" font-size="18" text-anchor="middle" class="key">assignment_id</text>
+<polyline points="500,1150 335,1045" class="line" />
+<ellipse cx="335" cy="1045" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="335" y="1051" font-size="18" text-anchor="middle" >assigned_at</text>
+<rect x="355" y="1118" width="290" height="64" fill="white" stroke="#111" stroke-width="2" />
+<text x="500" y="1157" font-size="23" text-anchor="middle" font-weight="bold">faculty_assignment</text>
+<polyline points="1320,1150 1320,968" class="line" />
+<ellipse cx="1320" cy="968" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1320" y="974" font-size="18" text-anchor="middle" class="key">offering_id</text>
+<polyline points="1320,1150 1155,1045" class="line" />
+<ellipse cx="1155" cy="1045" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1155" y="1051" font-size="18" text-anchor="middle" >section</text>
+<polyline points="1320,1150 1485,1045" class="line" />
+<ellipse cx="1485" cy="1045" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1485" y="1051" font-size="18" text-anchor="middle" >capacity</text>
+<polyline points="1320,1150 1155,1265" class="line" />
+<ellipse cx="1155" cy="1265" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1155" y="1271" font-size="18" text-anchor="middle" >created_at</text>
+<rect x="1175" y="1118" width="290" height="64" fill="white" stroke="#111" stroke-width="2" />
+<text x="1320" y="1157" font-size="23" text-anchor="middle" font-weight="bold">course_offering</text>
+<polyline points="2140,1150 2140,968" class="line" />
+<ellipse cx="2140" cy="968" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="2140" y="974" font-size="18" text-anchor="middle" class="key">semester_id</text>
+<polyline points="2140,1150 1975,1045" class="line" />
+<ellipse cx="1975" cy="1045" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1975" y="1051" font-size="18" text-anchor="middle" >semester_name</text>
+<polyline points="2140,1150 2305,1045" class="line" />
+<ellipse cx="2305" cy="1045" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="2305" y="1051" font-size="18" text-anchor="middle" >academic_year</text>
+<polyline points="2140,1150 1975,1265" class="line" />
+<ellipse cx="1975" cy="1265" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1975" y="1271" font-size="18" text-anchor="middle" >start_date</text>
+<polyline points="2140,1150 2305,1265" class="line" />
+<ellipse cx="2305" cy="1265" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="2305" y="1271" font-size="18" text-anchor="middle" >end_date</text>
+<polyline points="2140,1150 2140,1340" class="line" />
+<ellipse cx="2140" cy="1340" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="2140" y="1346" font-size="18" text-anchor="middle" >status</text>
+<rect x="1995" y="1118" width="290" height="64" fill="white" stroke="#111" stroke-width="2" />
+<text x="2140" y="1157" font-size="23" text-anchor="middle" font-weight="bold">semester</text>
+<polyline points="500,1850 500,1668" class="line" />
+<ellipse cx="500" cy="1668" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="500" y="1674" font-size="18" text-anchor="middle" class="key">student_id</text>
+<polyline points="500,1850 335,1745" class="line" />
+<ellipse cx="335" cy="1745" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="335" y="1751" font-size="18" text-anchor="middle" >enrollment_number</text>
+<polyline points="500,1850 665,1745" class="line" />
+<ellipse cx="665" cy="1745" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="665" y="1751" font-size="18" text-anchor="middle" >first_name</text>
+<polyline points="500,1850 335,1965" class="line" />
+<ellipse cx="335" cy="1965" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="335" y="1971" font-size="18" text-anchor="middle" >last_name</text>
+<polyline points="500,1850 665,1965" class="line" />
+<ellipse cx="665" cy="1965" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="665" y="1971" font-size="18" text-anchor="middle" >email</text>
+<polyline points="500,1850 500,2040" class="line" />
+<ellipse cx="500" cy="2040" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="500" y="2046" font-size="18" text-anchor="middle" >status</text>
+<rect x="355" y="1818" width="290" height="64" fill="white" stroke="#111" stroke-width="2" />
+<text x="500" y="1857" font-size="23" text-anchor="middle" font-weight="bold">student</text>
+<polyline points="1320,1850 1320,1668" class="line" />
+<ellipse cx="1320" cy="1668" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1320" y="1674" font-size="18" text-anchor="middle" class="key">enrollment_id</text>
+<polyline points="1320,1850 1155,1745" class="line" />
+<ellipse cx="1155" cy="1745" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1155" y="1751" font-size="18" text-anchor="middle" >enrollment_date</text>
+<polyline points="1320,1850 1485,1745" class="line" />
+<ellipse cx="1485" cy="1745" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1485" y="1751" font-size="18" text-anchor="middle" >enrollment_status</text>
+<rect x="1175" y="1818" width="290" height="64" fill="white" stroke="#111" stroke-width="2" />
+<text x="1320" y="1857" font-size="23" text-anchor="middle" font-weight="bold">enrollment</text>
+<polyline points="2140,1850 2140,1668" class="line" />
+<ellipse cx="2140" cy="1668" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="2140" y="1674" font-size="18" text-anchor="middle" class="key">grade_id</text>
+<polyline points="2140,1850 1975,1745" class="line" />
+<ellipse cx="1975" cy="1745" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1975" y="1751" font-size="18" text-anchor="middle" >marks_obtained</text>
+<polyline points="2140,1850 2305,1745" class="line" />
+<ellipse cx="2305" cy="1745" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="2305" y="1751" font-size="18" text-anchor="middle" >max_marks</text>
+<polyline points="2140,1850 1975,1965" class="line" />
+<ellipse cx="1975" cy="1965" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1975" y="1971" font-size="18" text-anchor="middle" >grade_letter</text>
+<polyline points="2140,1850 2305,1965" class="line" />
+<ellipse cx="2305" cy="1965" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="2305" y="1971" font-size="18" text-anchor="middle" >updated_at</text>
+<rect x="1995" y="1818" width="290" height="64" fill="white" stroke="#111" stroke-width="2" />
+<text x="2140" y="1857" font-size="23" text-anchor="middle" font-weight="bold">grade</text>
+<polyline points="500,2550 500,2368" class="line" />
+<ellipse cx="500" cy="2368" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="500" y="2374" font-size="18" text-anchor="middle" class="key">book_id</text>
+<polyline points="500,2550 335,2445" class="line" />
+<ellipse cx="335" cy="2445" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="335" y="2451" font-size="18" text-anchor="middle" >isbn</text>
+<polyline points="500,2550 665,2445" class="line" />
+<ellipse cx="665" cy="2445" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="665" y="2451" font-size="18" text-anchor="middle" >title</text>
+<polyline points="500,2550 335,2665" class="line" />
+<ellipse cx="335" cy="2665" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="335" y="2671" font-size="18" text-anchor="middle" >author</text>
+<polyline points="500,2550 665,2665" class="line" />
+<ellipse cx="665" cy="2665" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="665" y="2671" font-size="18" text-anchor="middle" >copies</text>
+<rect x="355" y="2518" width="290" height="64" fill="white" stroke="#111" stroke-width="2" />
+<text x="500" y="2557" font-size="23" text-anchor="middle" font-weight="bold">library_book</text>
+<polyline points="1320,2550 1320,2368" class="line" />
+<ellipse cx="1320" cy="2368" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1320" y="2374" font-size="18" text-anchor="middle" class="key">loan_id</text>
+<polyline points="1320,2550 1155,2445" class="line" />
+<ellipse cx="1155" cy="2445" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1155" y="2451" font-size="18" text-anchor="middle" >borrowed_date</text>
+<polyline points="1320,2550 1485,2445" class="line" />
+<ellipse cx="1485" cy="2445" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1485" y="2451" font-size="18" text-anchor="middle" >due_date</text>
+<polyline points="1320,2550 1155,2665" class="line" />
+<ellipse cx="1155" cy="2665" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1155" y="2671" font-size="18" text-anchor="middle" >returned_date</text>
+<rect x="1175" y="2518" width="290" height="64" fill="white" stroke="#111" stroke-width="2" />
+<text x="1320" y="2557" font-size="23" text-anchor="middle" font-weight="bold">library_loan</text>
+<polyline points="2140,2550 2140,2368" class="line" />
+<ellipse cx="2140" cy="2368" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="2140" y="2374" font-size="18" text-anchor="middle" class="key">attendance_id</text>
+<polyline points="2140,2550 1975,2445" class="line" />
+<ellipse cx="1975" cy="2445" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="1975" y="2451" font-size="18" text-anchor="middle" >date</text>
+<polyline points="2140,2550 2305,2445" class="line" />
+<ellipse cx="2305" cy="2445" rx="145" ry="31" fill="white" stroke="#222" stroke-width="1.6"/>
+<text x="2305" y="2451" font-size="18" text-anchor="middle" >status</text>
+<rect x="1995" y="2518" width="290" height="64" fill="white" stroke="#111" stroke-width="2" />
+<text x="2140" y="2557" font-size="23" text-anchor="middle" font-weight="bold">attendance</text>
+<text x="65" y="2920" font-size="21" >Scope: academic9 + attendance + library_book + library_loan. Associative entities preserve assignment, enrollment and loan identities.</text>
+<text x="65" y="2960" font-size="21" >No ISA hierarchy: faculty is an independent entity; admin/student are account role values, not faculty/student subclasses.</text>
+<text x="65" y="3000" font-size="18" >Inspired by the supplied hospital report, page 2: entity rectangles, relationship diamonds, attribute ellipses, underlined keys; topology is CampusOS-specific.</text>
+</svg>

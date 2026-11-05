@@ -44,8 +44,7 @@ npm install
 npm run dev        # http://localhost:3000  (database: web/lib/.data/campus.sqlite)
 ```
 
-- The SQLite file is created, migrated and deterministically seeded on first start.
-  Delete `web/lib/.data/` to reset everything.
+- The Next.js application writes live records to `web/lib/.data/campus.sqlite`. After each successful CRUD change, it also refreshes the local SQL mirror at `database/live_snapshot.sql`. Download it from Settings or `GET /api/database/export.sql`; restore into an empty SQLite DB with `sqlite3 restored.sqlite < database/live_snapshot.sql`. This snapshot is local and gitignored because it may contain personal data. It is SQLite, not the PostgreSQL `schema.sql`/`seed.sql`.
 - Production: `npm run build && npm start`
 - API: <http://localhost:3000/api/health>, reports catalogue at `/api/reports`
 - **Learn page:** <http://localhost:3000/learnit> serves every handover study file
