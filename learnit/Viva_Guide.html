@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CampusOS — Viva Speaking Guide</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; color: #1c1c1e; font-size: 10.5pt; line-height: 1.5; margin: 0; }
+  h1 { font-size: 21pt; margin: 0 0 2mm; }
+  h2 { font-size: 13.5pt; margin: 7mm 0 2.5mm; padding-bottom: 1.2mm; border-bottom: 2px solid #83D63B; color: #143500; }
+  h3 { font-size: 11pt; margin: 4.5mm 0 1.5mm; }
+  p { margin: 0 0 2.2mm; }
+  .lead { color: #555; font-size: 10pt; margin-bottom: 4mm; }
+  .quote { background: #f4f6f2; border-left: 3px solid #83D63B; padding: 2.5mm 3.5mm; margin: 2mm 0 3mm; border-radius: 2px; }
+  .time { display: inline-block; background: #143500; color: #83D63B; border-radius: 9px; padding: 0.6mm 2.6mm; font-size: 8pt; font-weight: 700; vertical-align: 2px; }
+  table { border-collapse: collapse; width: 100%; margin: 2mm 0 3mm; font-size: 9.5pt; }
+  th { background: #143500; color: #fff; text-align: left; padding: 1.8mm 2.5mm; }
+  td { border-bottom: 1px solid #d9dfd4; padding: 1.8mm 2.5mm; vertical-align: top; }
+  tr:nth-child(even) td { background: #f7f8f5; }
+  code { font-family: "Cascadia Code", Consolas, monospace; background: #eef1ea; border: 1px solid #dde2d8; border-radius: 2px; padding: 0 1mm; font-size: 8.8pt; }
+  ul { margin: 1mm 0 3mm 4.5mm; padding: 0; }
+  li { margin-bottom: 1.2mm; }
+  .qa { margin-bottom: 3mm; }
+  .qa .q { font-weight: 700; color: #143500; }
+  .hdr { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 3px solid #1c1c1e; padding-bottom: 2.5mm; margin-bottom: 4mm; }
+  .hdr .brand { font-weight: 800; letter-spacing: 0.5px; }
+  .hdr .brand span { color: #4f9d13; }
+  .hdr .sub { font-size: 9pt; color: #777; }
+  .pagebreak { break-before: page; }
+  .foot { margin-top: 5mm; padding-top: 2mm; border-top: 1px solid #ccc; font-size: 8pt; color: #888; }
+  .warn { background: #fff8e6; border: 1px solid #eedd9a; border-radius: 3px; padding: 2.5mm 3.5mm; margin: 3mm 0; font-size: 9.5pt; }
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="brand">Campus<span>OS</span> · Viva Speaking Guide</div>
+  <div class="sub">DBMS Project · Frontend, Backend Integration &amp; Codebase Management</div>
+</div>
+<p class="lead">A 4–5 minute spoken walkthrough with timings, the tab-by-tab map, and a rapid-fire Q&amp;A sheet. Speak the <span class="quote" style="display:inline;padding:0 2mm;">quoted blocks</span>; keep the tables as your glance notes.</p>
+
+<h2>1 · Opening <span class="time">30 sec</span></h2>
+<div class="quote">"My project is <b>CampusOS</b> — a College Management System covering students, faculty, departments, courses, offerings, enrollments and grades, plus attendance and a library module. What I'll emphasize today is the part I personally built: <b>the frontend, the backend integration layer, and codebase management</b>. The distinctive thing is that it is not one demo — it is <b>one backend contract served by two independent frontends</b>, which forced me to keep integration discipline."</div>
+
+<h2>2 · Tech stack <span class="time">60 sec</span></h2>
+<div class="quote">"There are two builds in my repo. <b>The build I'm demonstrating</b> is Next.js 15 with React 19 on Node 26. The database is <b>SQLite running inside the Node process itself</b> using the official <code>node:sqlite</code> module — no separate database server; API and DB share one runtime. Data lives in a WAL-mode SQLite file, and schema, seed and migrations are SQL files under version control. Styling is <b>Tailwind CSS</b> with design tokens — charcoal surfaces, one flat green accent, no gradients: a clean, tool-like UI. <b>The second build</b> is a classic split stack: React + Vite frontend, FastAPI with SQLAlchemy and Pydantic, and <b>PostgreSQL 16 in Docker</b>. Both builds speak almost the same REST contract — that's my proof the integration layer is clean. Everything else is small: axios for HTTP, recharts for charts, lucide-react for icons, react-hook-form for forms. Testing is Node's built-in test runner plus Puppeteer browser smoke tests."</div>
+<table>
+  <tr><th style="width:32%">Component</th><th>Main build (demoed)</th><th>Second build</th></tr>
+  <tr><td>Frontend</td><td>Next.js 15 App Router, React 19, Tailwind 3</td><td>React + Vite, Tailwind, Recharts</td></tr>
+  <tr><td>Backend</td><td>Next.js API routes (Node 26)</td><td>FastAPI, SQLAlchemy, Pydantic</td></tr>
+  <tr><td>Database</td><td>SQLite via <code>node:sqlite</code>, WAL mode</td><td>PostgreSQL 16 (Docker)</td></tr>
+  <tr><td>HTTP client</td><td>axios (one shared instance)</td><td>axios</td></tr>
+  <tr><td>Tests</td><td>14 Node suites + Puppeteer smoke (24 checks)</td><td>83 pytest suites</td></tr>
+</table>
+
+<h2>3 · How the frontend is made <span class="time">90 sec</span></h2>
+<div class="quote">"The frontend is a single admin application rendered inside one smart root component, <code>CollegeApp.jsx</code> — a state machine with three states: <i>loading</i> (calls <code>/auth/me</code> to hydrate the session), <i>unauthenticated</i> (Login screen), <i>authenticated</i> (student portal or admin workspace based on the server-side role). So authorization isn't cosmetic — the React tree itself is different per role.</div>
+<div class="quote">"The key architectural idea is the <b>generic ResourcePage component</b>: fourteen reusable building blocks — DataTable, FormModal, ConfirmDialog, Pagination, Badge, Field, EmptyState, ErrorState, Skeleton — plus one config file, <code>resources.js</code>, declaring every entity as data: endpoint, columns, form fields, validation, sort, delete warning. A Student page and a Course page are the same component fed different config. I added attendance and the library module with roughly 15 lines of config and zero new components.</div>
+<div class="quote">"Data flow is one-directional. All HTTP goes through one axios instance in <code>services/api.js</code>. Failures are normalized there: a 401 fires a global session-expired event; 409/422 become readable field messages; and <b>only GET requests auto-retry</b> — mutations are never silently re-sent, because a retried POST could create a duplicate record."</div>
+<ul>
+  <li><b>Routing:</b> one catch-all page resolves <code>/students</code>, <code>/students/41</code>, <code>/reports</code>, <code>/settings</code> into a shared shell — fixed sidebar, topbar with theme toggle, shared toast notifications.</li>
+  <li><b>Detail screens:</b> students, faculty, courses, semesters, offerings each have a detail view with related records (enrollments, offerings, grades).</li>
+</ul>
+
+<h2>4 · What each tab does <span class="time">60 sec</span></h2>
+<table>
+  <tr><th style="width:23%">Tab</th><th>What it does</th></tr>
+  <tr><td><b>Dashboard</b></td><td>DB aggregates: student/faculty/course counts, enrollment trends (Recharts).</td></tr>
+  <tr><td><b>Students · Faculty · Departments</b></td><td>Full CRUD, search, sort, pagination; students &amp; faculty FK-linked to departments.</td></tr>
+  <tr><td><b>Courses → Offerings → Enrollments → Grades</b></td><td>The academic chain: a course offered per semester with section &amp; capacity; students enroll into an offering; grades attach to enrollments. <b>Capacity is enforced in the DB with triggers + immediate transactions</b> — a lost race gets a readable 409.</td></tr>
+  <tr><td><b>Semesters</b></td><td>Academic calendar anchor for offerings.</td></tr>
+  <tr><td><b>Attendance</b></td><td>Per-enrollment date records (Present / Absent / Late / Excused).</td></tr>
+  <tr><td><b>Library books / loans</b></td><td>Catalog plus issued-book tracking with due dates and overdue flags.</td></tr>
+  <tr><td><b>Reports</b></td><td>SQL aggregation: per-student GPA, grade distribution, semester counts; CSV export.</td></tr>
+  <tr><td><b>Student access</b></td><td>Provision a student's login, linked to their student record.</td></tr>
+  <tr><td><b>SQL activity</b></td><td>Live audit of the last 200 SQL statements executed, excluding password/session tables.</td></tr>
+  <tr><td><b>Settings</b></td><td>Environment info + one-click download of the whole database as SQL (reproducible demo state).</td></tr>
+</table>
+<div class="quote">"The <b>student role</b> sees none of that — a four-tab read-only portal: Overview, My courses with grades, Attendance with a computed rate, Library. Every query is filtered server-side by the student ID bound to the account, so account A physically cannot read account B's rows."</div>
+
+<h2>5 · Auth + closing <span class="time">45 sec</span></h2>
+<div class="quote">"Authentication is real, not demo-mocked: <b>scrypt-hashed passwords, server-side sessions in the database, HttpOnly SameSite cookies,</b> cross-origin protection, and login throttling per account. Plain-text passwords exist nowhere. Engineering discipline wraps it up: <b>14 Node test suites</b> covering CRUD, constraints, capacity races, authorization and the audit trail; a <b>24-check Puppeteer smoke test</b> in real Chromium; feature-scoped git commits; and personal data — the live SQLite file and SQL snapshots — is deliberately gitignored. So: one contract, two stacks, a config-driven frontend, database-enforced integrity, and tests that prove both."</div>
+<div class="warn"><b>Honesty line (use if pressed):</b> "This is a functioning local administrative demo — real auth, real constraints, real tests. For production I'd add HTTPS termination, proxy rate limiting, and a multi-instance session store."</div>
+
+<h2 class="pagebreak">6 · Rapid-fire Q&amp;A sheet</h2>
+<div class="qa"><p class="q">"Why SQLite in one build and PostgreSQL in the other?"</p>
+<p>The Next build is a self-contained single-runtime deployment — SQLite via <code>node:sqlite</code> needs no server, ideal for a portable demo. The formal build uses PostgreSQL for real server features: concurrent transactions, <code>SELECT … FOR UPDATE</code> row locks, views, richer SQL. Same logical schema, both SQL, both with enforced foreign keys and triggers.</p></div>
+<div class="qa"><p class="q">"Where is the backend? It looks like one repo."</p>
+<p>Next.js API routes under <code>app/api/[...path]/route.js</code> <i>are</i> the backend — a server-side handler that opens the DB, runs a dispatch table, returns JSON. Server code, just shipped inside the Next app instead of a separate process like FastAPI in build two.</p></div>
+<div class="qa"><p class="q">"Show me the integration layer."</p>
+<p>Three files: <code>services/api.js</code> (single axios instance, error normalization, retry policy) · <code>lib/api.mjs</code> (server dispatch, validation, friendly constraint errors) · <code>resources.js</code> (the contract between them).</p></div>
+<div class="qa"><p class="q">"How do you prevent SQL injection?"</p>
+<p>Every query is parameterized with <code>?</code> placeholders — user input is never concatenated into SQL. Only whitelisted column names from internal config reach identifier positions. Tests assert malicious input fails safely.</p></div>
+<div class="qa"><p class="q">"What if the DB goes down mid-session?"</p>
+<p>503 → UI shows "Cannot reach the server, your records are safe" with a retry button. GETs auto-retry once with backoff; mutations show an error and stay on the form — nothing re-submitted, nothing lost.</p></div>
+<div class="qa"><p class="q">"Why no Person → Student/Faculty inheritance?"</p>
+<p>Specialization was deliberately <b>not</b> modeled: student and faculty have different required fields and lifecycles, so they are separate tables with their own FKs to department. A defensible normalization decision, not an oversight.</p></div>
+<div class="qa"><p class="q">"Why two ER diagrams?"</p>
+<p>Conceptual (Chen notation: entities, relationships, attributes) vs relational (actual tables, PKs, FKs, cardinality). Styled after my reference report; domain tables and the four auth tables are covered separately.</p></div>
+<div class="qa"><p class="q">"What are you proudest of?"</p>
+<p>Pick one: capacity race prevention at the DB level (two simultaneous last-seat enrollments — one succeeds, one gets a readable 409), or the config-driven architecture — "I added three entities and ten screens without writing a new component."</p></div>
+<div class="qa"><p class="q">"Concurrency — explain."</p>
+<p>SQLite build: <code>BEGIN IMMEDIATE</code> transactions plus capacity triggers. PostgreSQL build: <code>SELECT … FOR UPDATE</code> row locks plus a trigger. Both guarantee the last seat can never be double-booked.</p></div>
+<div class="qa"><p class="q">"How do you know it works?"</p>
+<p>14 Node suites (CRUD, constraints, capacity races, authorization, audit trail) = 14/14 pass; 24-check Puppeteer smoke against port 3000; live SQL snapshot restores into a fresh SQLite file with a clean foreign-key check.</p></div>
+
+<h2>7 · Numbers to have ready</h2>
+<table>
+  <tr><th>Fact</th><th>Value</th></tr>
+  <tr><td>Domain tables</td><td>12 (9 academic + attendance, library_book, library_loan)</td></tr>
+  <tr><td>Auth/support tables</td><td>4 (portal_account, portal_session, login_throttle, portal_migration)</td></tr>
+  <tr><td>Password/token storage</td><td>scrypt hashes + SHA-256 token hashes only</td></tr>
+  <tr><td>Session lifetime</td><td>8 hours, HttpOnly · SameSite=Strict</td></tr>
+  <tr><td>Login throttle</td><td>5 failed attempts → 15-minute lockout (hashed identifier only)</td></tr>
+  <tr><td>SQL audit viewer</td><td>last 200 statements, auth tables excluded</td></tr>
+  <tr><td>DB snapshot</td><td><code>GET /api/database/export.sql</code>, auto-refreshed on every mutation</td></tr>
+  <tr><td>Test status at push</td><td>14/14 Node suites · Next build ✓ · Vite build ✓ · UI smoke 24/24</td></tr>
+  <tr><td>Repo</td><td>github.com/Bhanu4417/DBMS-PROJCT (main)</td></tr>
+</table>
+<div class="foot">CampusOS · College Management System · DBMS project viva guide · generated alongside the report-style ER diagrams in learnit/</div>
+</body>
+</html>
