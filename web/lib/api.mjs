@@ -1,13 +1,14 @@
+import { recordSql } from './sql-audit.mjs';
 import { DatabaseSync } from 'node:sqlite';
-import { mkdirSync, realpathSync } from 'node:fs';
+import { mkdirSync, realpathSync, renameSync, writeFileSync } from 'node:fs';
 import { dirname, resolve, relative, isAbsolute } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { schema } from './schema.mjs';
 import { queries, resources, capacityTriggers } from './queries.mjs';
 import { seed } from './seed.mjs';
 import { reporting, reportDefinitions } from './reports.mjs';
 
 const workspace = resolve(process.cwd(), process.cwd().endsWith('/web') ? '..' : '.');
+const defaultDatabaseFile = resolve(workspace, 'web/lib/.data/campus.sqlite');
 const fail = (status, detail) => { throw Object.assign(new Error(detail), { status }); };
 const inside = (path) => { const rel=relative(workspace,path); return rel!== '..' && !rel.startsWith('../') && !isAbsolute(rel); };
 const integer = (v, label, min=1, max=Number.MAX_SAFE_INTEGER) => {
@@ -15,9 +16,9 @@ const integer = (v, label, min=1, max=Number.MAX_SAFE_INTEGER) => {
   return Number(v);
 };
 
-/** Dedicated file may be supplied by tests; files outside this workspace are rejected. */
-export function createService({ filename = resolve(workspace, 'web/lib/.data/campus.sqlite'), seed: shouldSeed = true } = {}) {
+export function createService({ filename = defaultDatabaseFile, seed: shouldSeed = true } = {}) {
   filename=resolve(filename);
+  const persistSqlSnapshot = filename === defaultDatabaseFile;
   if(!inside(filename)) throw new Error('Database must be inside the workspace');
   // Check existing ancestors before mkdir, preventing writes through symlinked directories.
   let ancestor=dirname(filename);
@@ -25,12 +26,33 @@ export function createService({ filename = resolve(workspace, 'web/lib/.data/cam
   mkdirSync(dirname(filename),{recursive:true});
   try { if(!inside(realpathSync(filename))) throw new Error('Database symlink escapes workspace'); } catch(e) { if(e.code!=='ENOENT') throw e; }
   const db=new DatabaseSync(filename);
+  const originalPrepare = db.prepare.bind(db), originalExec = db.exec.bind(db);
+  db.prepare = (sql) => {
+    const statement = originalPrepare(sql);
+    return new Proxy(statement, {get(target, key) {
+      const value = Reflect.get(target, key, target);
+      if (typeof value !== 'function') return value;
+      if (!['all','get','run'].includes(key)) return value.bind(target);
+      return (...args) => { const start=performance.now(); try {const result=value.apply(target,args);recordSql(sql,performance.now()-start,key==='all'?result.length:key==='get'?(result?1:0):Number(result.changes));return result;} catch(error){recordSql(sql,performance.now()-start,null);throw error;} };
+    }});
+  };
+  db.exec = (sql) => {const start=performance.now();try{return originalExec(sql);}finally{recordSql(sql,performance.now()-start,null);}};
   db.function('regexp',{deterministic:true},(pattern,value)=>value===null?0:Number(new RegExp(pattern).test(String(value))));
   db.exec('PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000; PRAGMA journal_mode=WAL;');
   /** Target facility: wrap a scalar function so every write it makes is atomic.
    *  Alternatives: savepoints per statement (verbose, bug-prone) or no wrap at all
    *  (a mid-write failure would leave half a record). */
-  const transaction = (fn) => { db.exec('BEGIN IMMEDIATE'); try { const result=fn(); db.exec('COMMIT'); return result; } catch(e) { db.exec('ROLLBACK'); throw e; } };
+  const transaction = (fn) => {
+    db.exec('BEGIN IMMEDIATE');
+    let result;
+    try { result=fn(); db.exec('COMMIT'); }
+    catch(e) { db.exec('ROLLBACK'); throw e; }
+    if (persistSqlSnapshot) {
+      try { persistSnapshot(); }
+      catch (error) { console.error('CampusOS SQL snapshot refresh failed:', error); }
+    }
+    return result;
+  };
   transaction(()=>{
     if(!db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='department'").get()) {
       db.exec(schema); db.exec(capacityTriggers); if(shouldSeed) seed(db);
@@ -121,6 +143,36 @@ export function createService({ filename = resolve(workspace, 'web/lib/.data/cam
     if(section==='activity') {const limit=q.has('limit')?integer(q.get('limit'),'limit',1,20):5;return {recent_students:rows('students').sort((a,b)=>b.student_id-a.student_id).slice(0,limit).map(s=>({...s,student_name:s.full_name})),recent_enrollments:rows('enrollments').sort((a,b)=>b.enrollment_id-a.enrollment_id).slice(0,limit),popular_courses:reports.report('course-enrollment').slice(0,limit),department_overview:rows('departments').map(d=>({...d,students:d.student_count,faculty:d.faculty_count,courses:d.course_count}))};}
     fail(404,'Dashboard endpoint not found');
   }
+  function exportSqlSnapshot() {
+    const lines = [
+      '-- CampusOS live SQLite snapshot. Restore into a NEW empty SQLite database.',
+      '-- Generated from the current persisted database; includes current rows and schema.',
+      'PRAGMA foreign_keys = OFF;',
+      'PRAGMA ignore_check_constraints = ON;',
+      'BEGIN TRANSACTION;',
+    ];
+    const objects = db.prepare("SELECT type, name, sql FROM sqlite_master WHERE sql IS NOT NULL AND name NOT LIKE 'sqlite_%' AND name NOT IN ('portal_account','portal_session','login_throttle','portal_migration') AND tbl_name NOT IN ('portal_account','portal_session','login_throttle','portal_migration') ORDER BY CASE type WHEN 'table' THEN 0 WHEN 'index' THEN 1 ELSE 2 END, name").all();
+    for (const object of objects.filter((item) => item.type === 'table')) lines.push(`${object.sql};`);
+    const quote = (value) => value === null ? 'NULL' : typeof value === 'number' ? String(value) : typeof value === 'bigint' ? String(value) : value instanceof Uint8Array ? `X'${Buffer.from(value).toString('hex')}'` : `'${String(value).replaceAll("'", "''")}'`;
+    for (const table of [...Object.values(resources).map(([table])=>table),'attendance','library_book','library_loan']) {
+      const columns = db.prepare(`PRAGMA table_info("${table}")`).all().map((column) => column.name);
+      if (!columns.length) continue;
+      const quotedColumns = columns.map((column) => `"${column.replaceAll('"', '""')}"`).join(', ');
+      for (const row of db.prepare(`SELECT * FROM "${table}"`).all()) {
+        lines.push(`INSERT INTO "${table}" (${quotedColumns}) VALUES (${columns.map((column) => quote(row[column])).join(', ')});`);
+      }
+    }
+    for (const object of objects.filter((item) => item.type === 'index' || item.type === 'trigger')) lines.push(`${object.sql};`);
+    lines.push('COMMIT;', 'PRAGMA ignore_check_constraints = OFF;', 'PRAGMA foreign_keys = ON;', '');
+    return lines.join('\n');
+  }
+  function persistSnapshot() {
+    if (!persistSqlSnapshot) return;
+    const target = resolve(workspace, 'database/live_snapshot.sql');
+    const temporary = `${target}.${process.pid}.tmp`;
+    writeFileSync(temporary, exportSqlSnapshot(), {encoding:'utf8',mode:0o600});
+    renameSync(temporary, target);
+  }
   /** Synchronous dispatch returns {status, body, headers}; no HTTP server required. */
   function dispatch(method,path,body) {
     try {
@@ -129,6 +181,7 @@ export function createService({ filename = resolve(workspace, 'web/lib/.data/cam
       const [key,segment,sub]=parts,q=url.searchParams;
       method=method.toUpperCase();
       if(parts.length>3) fail(404,'Endpoint not found');
+      if(method==='GET' && key==='database' && segment==='export.sql' && !sub) return {status:200,headers:{'Content-Type':'application/sql; charset=utf-8','Content-Disposition':'attachment; filename="campusos-live-snapshot.sql"'},body:exportSqlSnapshot()};
       if(method==='GET' && key==='health' && !segment) return {status:200,body:{status:'ok',database:'sqlite',foreign_keys:db.prepare('PRAGMA foreign_keys').get().foreign_keys===1}};
       if(method==='GET' && key==='dashboard' && !sub) return {status:200,body:dashboard(segment,q)};
       if(method==='GET' && key==='reports' && !sub) {
@@ -181,7 +234,8 @@ export function createService({ filename = resolve(workspace, 'web/lib/.data/cam
       return {status,body:{detail:message}};
     }
   }
-  return { dispatch, close:()=>db.close(), db };
+  return { dispatch, refreshSnapshot: persistSnapshot, close:()=>db.close(), db };
 }
 let singleton;
-export function dispatch(method,path,body) {singleton??=createService();return singleton.dispatch(method,path,body);}
+export function getService() { singleton ??= createService(); return singleton; }
+export function dispatch(method,path,body) { return getService().dispatch(method,path,body); }

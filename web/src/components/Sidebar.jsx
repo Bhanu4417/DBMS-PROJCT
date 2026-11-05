@@ -29,6 +29,11 @@ export const NAV_ITEMS = [
   { to: '/enrollments', label: 'Enrollments', icon: ClipboardList },
   { to: '/grades', label: 'Grades', icon: Award },
   { to: '/reports', label: 'Reports', icon: BarChart3 },
+  { to: '/attendance', label: 'Attendance', icon: UserCheck },
+  { to: '/library-books', label: 'Library books', icon: BookOpen },
+  { to: '/library-loans', label: 'Library loans', icon: ClipboardList },
+  { to: '/accounts', label: 'Student access', icon: Users },
+  { to: '/dbviewer', label: 'SQL activity', icon: Layers },
   { to: '/settings', label: 'Settings', icon: Settings },
 ];
 
@@ -83,7 +88,7 @@ export default function Sidebar({ collapsed, onToggle }) {
       <div className="border-t border-line p-3">
         {!collapsed && (
           <p className="mb-2 rounded-lg border border-line bg-soft px-2.5 py-2 text-[10px] leading-relaxed text-muted">
-            Local administrative demo — no login required. All data lives in SQLite.
+            Administrator workspace · secured sessions · local SQLite database.
           </p>
         )}
         <button

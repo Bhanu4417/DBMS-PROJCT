@@ -21,7 +21,7 @@ export default function AppLayout({children}) {
             <div className="mb-4 flex items-center justify-between">
               <span className="flex items-center gap-2 text-sm font-bold text-ink">
                 <GraduationCap size={18} className="text-accent" /> CampusOS
-                <span className="-ml-2 text-accent">OS</span>
+                
               </span>
               <button
                 type="button"

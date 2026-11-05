@@ -45,9 +45,12 @@ export default function Settings() {
               <p className="flex items-center gap-2 text-success">
                 <CheckCircle2 size={16} /> Connected to SQLite
               </p>
-              <Detail label="Server version" value={health.data.sqlite_version || 'Local file'} />
-              <Detail label="API base URL" value={API_BASE} />
+              <Detail label="Database file" value="web/lib/.data/campus.sqlite" />
+              <p className="mt-2 text-xs text-muted">Your changes are saved immediately in the persistent SQLite database. Schema and seed SQL files define initial structure/data; use the download above for a SQL snapshot of current records.</p>
               <Detail label="API status" value={<Badge value="Healthy" tone="success" />} />
+              <a href={`${API_BASE}/database/export.sql`} className="btn-ghost mt-2 inline-flex text-xs" download>
+                Download current database as SQL
+              </a>
             </div>
           ) : (
             <div className="space-y-2 text-sm">
@@ -90,10 +93,7 @@ export default function Settings() {
             <h2 className="text-sm font-semibold text-ink">Access model</h2>
           </div>
           <p className="text-sm leading-relaxed text-muted">
-            This build is a <span className="font-medium text-ink">local administrative demo</span>.
-            Authentication is intentionally out of scope, so there is no login screen and no logout
-            button pretending to work. Run it only on a trusted machine or network, and add real
-            authentication before exposing it publicly.
+            This local demo uses real password-hashed accounts and server-side sessions. Administrators manage records; students can view only their own academic records. Use HTTPS in production, change demonstration credentials, and review access policies before public deployment.
           </p>
         </section>
 

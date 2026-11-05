@@ -38,7 +38,15 @@ export function fieldErrors(error) {
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(error),
+  async (error) => {
+    const config=error.config;
+    // Retry reads only: never replay a mutation after a network interruption.
+    if(config?.method==='get' && !config.__retried && (!error.response || error.response.status===503)) {
+      config.__retried=true;await new Promise(resolve=>setTimeout(resolve,700));return api(config);
+    }
+    if(error.response?.status===401 && !config?.url?.includes('/auth/')) window.dispatchEvent(new Event('campus-session-expired'));
+    return Promise.reject(error);
+  },
 );
 
 export const resources = {

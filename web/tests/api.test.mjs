@@ -102,7 +102,20 @@ test('search, filters, sort and pagination envelopes',()=>{
   assert.equal(call('GET','enrollments?has_grade=true').total,60);
 });
 
-test('dashboard and report aggregates, catalog, CSV export and unknown reports',()=>{
+test('database SQL snapshot exports current schema and persisted CRUD records',()=>{
+  const result=service.dispatch('GET','/api/database/export.sql');
+  assert.equal(result.status,200);
+  assert.match(result.headers['Content-Type'],/application\/sql/);
+  assert.match(result.body,/CREATE TABLE department/);
+  assert.match(result.body,/CREATE TABLE student/);
+  assert.match(result.body,/INSERT INTO "department"/);
+  const created=call('POST','departments',{department_code:'SQLX',department_name:'SQL Snapshot Test'} ,201);
+  const snapshot=service.dispatch('GET','/api/database/export.sql').body;
+  assert.match(snapshot,new RegExp(`SQL Snapshot Test`));
+  call('DELETE',`departments/${created.department_id}`);
+});
+
+ test('dashboard and report aggregates, catalog, CSV export and unknown reports',()=>{
   const stats=call('GET','dashboard/stats');assert.equal(stats.total_students,50);assert.equal(stats.total_enrollments,100);
   const charts=call('GET','dashboard/charts');assert.equal(charts.students_by_department.reduce((n,r)=>n+r.value,0),50);
   assert.equal(call('GET','dashboard/activity?limit=3').recent_students.length,3);

@@ -1,10 +1,16 @@
 'use client';
 import {useEffect,useState} from 'react';
-import {usePathname} from 'next/navigation';
+import {usePathname,useRouter} from 'next/navigation';
 import AppLayout from './layouts/AppLayout';
 import ResourcePage from './components/ResourcePage';
 import resources from './config/resources';
 import {ToastProvider} from './hooks/useToast';
+import api from './services/api';
+import Login from './screens/Login';
+import Portal from './screens/Portal';
+import DbViewer from './screens/DbViewer';
+import AdminAccounts from './screens/AdminAccounts';
+import SessionControls from './SessionControls';
 import Dashboard from './screens/Dashboard';
 import StudentDetail from './screens/StudentDetail';
 import FacultyDetail from './screens/FacultyDetail';
@@ -15,4 +21,19 @@ import Reports from './screens/Reports';
 import Settings from './screens/Settings';
 import NotFound from './screens/NotFound';
 const details={students:StudentDetail,faculty:FacultyDetail,courses:CourseDetail,semesters:SemesterDetail,offerings:OfferingDetail};
-export default function CollegeApp(){const path=usePathname();const [mounted,setMounted]=useState(false);useEffect(()=>setMounted(true),[]);if(!mounted)return <div className="boot">shoptaker <span>/ college</span></div>;const [entity,id]=path.split('/').filter(Boolean);const Detail=details[entity];let page=!entity?<Dashboard/>:id&&Detail?<Detail/>:resources[entity]?<ResourcePage key={entity} config={resources[entity]}/>:entity==='reports'?<Reports/>:entity==='settings'?<Settings/>:<NotFound/>;return <ToastProvider><AppLayout>{page}</AppLayout></ToastProvider>;}
+export default function CollegeApp(){
+  const path=usePathname(),router=useRouter();
+  const [user,setUser]=useState(null),[loading,setLoading]=useState(true),[error,setError]=useState('');
+  const check=()=>{setLoading(true);setError('');api.get('/auth/me').then(r=>setUser(r.data)).catch(e=>{if(e.response?.status===401)setUser(null);else setError('Cannot reach the server. Your records are safe; please retry.');}).finally(()=>setLoading(false));};
+  useEffect(()=>{check();const expired=()=>{setUser(null);router.replace('/');};window.addEventListener('campus-session-expired',expired);return()=>window.removeEventListener('campus-session-expired',expired);},[]);
+  const login=(account)=>{setUser(account);router.replace('/');};
+  const logout=async()=>{await api.post('/auth/logout',{});setUser(null);router.replace('/');};
+  if(loading)return <div className="boot">CampusOS · Connecting securely…</div>;
+  if(error)return <div className="m-8 card p-6"><p>{error}</p><button className="btn-primary mt-4" onClick={check}>Retry connection</button></div>;
+  if(!user)return <Login onAuthenticated={login}/>;
+  const session=<SessionControls user={user} onLogout={logout}/>;
+  if(user.role==='student')return <ToastProvider><div className="min-h-screen bg-bg"><header className="flex flex-wrap items-center justify-between gap-4 border-b border-line bg-panel px-6 py-4"><h1>CampusOS <span className="text-sm text-muted">/ student portal</span></h1>{session}</header><main className="mx-auto max-w-7xl p-4 sm:p-8"><Portal user={user}/></main></div></ToastProvider>;
+  const [entity,id]=path.split('/').filter(Boolean),Detail=details[entity];
+  const page=!entity?<Dashboard/>:id&&Detail?<Detail/>:resources[entity]?<ResourcePage key={entity} config={resources[entity]}/>:entity==='reports'?<Reports/>:entity==='settings'?<Settings/>:entity==='dbviewer'?<DbViewer/>:entity==='accounts'?<AdminAccounts/>:<NotFound/>;
+  return <ToastProvider><AppLayout><div className="mb-5 flex justify-end">{session}</div>{page}</AppLayout></ToastProvider>;
+}
