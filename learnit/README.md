@@ -2,6 +2,9 @@
 
 ## Presentation guides
 
+- [Specialization and generalization (PDF)](Specialization_Generalization.pdf) — concepts, constraints, mapping strategies and honest CampusOS implementation comparison. [Editable HTML](Specialization_Generalization.html).
+- [Presentation browser and DBeaver setup](Presentation_Setup.md) · [SQL activity query](Presentation_SQL_Log.sql).
+
 - [10-minute use-case presentation (PDF)](usecase.pdf) — frontend/backend developer presentation: stack choices, component architecture, integration, admin/student tabs and SQL activity; brief PK/FK reference, no ER diagrams. [Editable HTML](usecase.html).
 - [Short viva speaking guide (PDF)](Viva_Guide.pdf) · [Editable HTML](Viva_Guide.html).
 
