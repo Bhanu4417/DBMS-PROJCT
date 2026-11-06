@@ -18,7 +18,7 @@ const accountView = a => ({ account_id: a.account_id, email: a.email, role: a.ro
 const cookie = (value, maxAge) => `${cookieName}=${value}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${maxAge}${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`;
 
 export function initializePortal(db) {
-  if (initialized.has(db)) return;
+  if (initialized.has(db)) return false;
   db.exec(`BEGIN IMMEDIATE;
     CREATE TABLE IF NOT EXISTS portal_account (
       account_id INTEGER PRIMARY KEY, email TEXT NOT NULL COLLATE NOCASE UNIQUE,
@@ -32,6 +32,35 @@ export function initializePortal(db) {
       expires_at INTEGER NOT NULL
     );
     CREATE TABLE IF NOT EXISTS login_throttle (key_hash TEXT PRIMARY KEY, attempts INTEGER NOT NULL, reset_at INTEGER NOT NULL);
+    -- Optional EER identity layer: it references legacy student/faculty rows without replacing them.
+    -- Partial specialization is intentional: a Person may have no linked role; overlap is allowed.
+    CREATE TABLE IF NOT EXISTS campus_person (
+      person_id INTEGER PRIMARY KEY, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE TABLE IF NOT EXISTS person_student (
+      person_id INTEGER PRIMARY KEY REFERENCES campus_person(person_id) ON DELETE CASCADE,
+      student_id INTEGER NOT NULL UNIQUE REFERENCES student(student_id) ON DELETE RESTRICT
+    );
+    CREATE TABLE IF NOT EXISTS person_faculty (
+      person_id INTEGER PRIMARY KEY REFERENCES campus_person(person_id) ON DELETE CASCADE,
+      faculty_id INTEGER NOT NULL UNIQUE REFERENCES faculty(faculty_id) ON DELETE RESTRICT
+    );
+    CREATE TABLE IF NOT EXISTS person_contact (
+      person_id INTEGER NOT NULL REFERENCES campus_person(person_id) ON DELETE CASCADE,
+      contact_type TEXT NOT NULL CHECK(contact_type IN ('phone','email')),
+      contact_value TEXT NOT NULL CHECK(length(trim(contact_value)) BETWEEN 1 AND 150),
+      PRIMARY KEY(person_id,contact_type,contact_value)
+    );
+    CREATE VIEW IF NOT EXISTS v_person_eer AS
+      SELECT p.person_id,p.created_at,
+        ps.student_id,s.enrollment_number AS student_enrollment_number,
+        CASE WHEN s.student_id IS NOT NULL THEN trim(s.first_name || ' ' || s.last_name) END AS student_name,
+        pf.faculty_id,f.employee_code AS faculty_employee_code,
+        CASE WHEN f.faculty_id IS NOT NULL THEN trim(f.first_name || ' ' || f.last_name) END AS faculty_name,
+        (SELECT count(*) FROM person_contact pc WHERE pc.person_id=p.person_id) AS contact_count
+      FROM campus_person p
+      LEFT JOIN person_student ps USING(person_id) LEFT JOIN student s USING(student_id)
+      LEFT JOIN person_faculty pf USING(person_id) LEFT JOIN faculty f USING(faculty_id);
     CREATE TABLE IF NOT EXISTS attendance (
       attendance_id INTEGER PRIMARY KEY, enrollment_id INTEGER NOT NULL REFERENCES enrollment(enrollment_id) ON DELETE RESTRICT,
       date TEXT NOT NULL, status TEXT NOT NULL CHECK(status IN ('Present','Absent','Late','Excused')),
@@ -84,6 +113,7 @@ export function initializePortal(db) {
     }
     db.exec('COMMIT');
     initialized.add(db);
+    return true;
   } catch (error) { db.exec('ROLLBACK'); throw error; }
 }
 
@@ -189,6 +219,65 @@ async function dispatchPortal(service, request, url, path, account, tokenHash) {
     if (path === '/portal/library') return { status: 200, body: db.prepare(`SELECT l.*, b.isbn,b.title,b.author FROM library_loan l JOIN library_book b USING(book_id) WHERE l.student_id=? ORDER BY l.loan_id DESC`).all(sid) };
     fail(404, 'Endpoint not found');
   }
+  if (path === '/eer/people' && method === 'GET') {
+    const items = db.prepare('SELECT * FROM v_person_eer ORDER BY person_id DESC').all().map(row => ({
+      ...row,
+      contacts: db.prepare('SELECT contact_type,contact_value FROM person_contact WHERE person_id=? ORDER BY contact_type,contact_value').all(row.person_id),
+    }));
+    return {status:200,body:{items,total:items.length}};
+  }
+  if (path === '/eer/people' && method === 'POST') {
+    objectBody(body,['student_id','faculty_id']);
+    const studentId=body.student_id==null||body.student_id===''?null:idValue(body.student_id);
+    const facultyId=body.faculty_id==null||body.faculty_id===''?null:idValue(body.faculty_id);
+    if(studentId&&!db.prepare('SELECT student_id FROM student WHERE student_id=?').get(studentId))fail(422,'Student does not exist');
+    if(facultyId&&!db.prepare('SELECT faculty_id FROM faculty WHERE faculty_id=?').get(facultyId))fail(422,'Faculty does not exist');
+    db.exec('BEGIN IMMEDIATE');
+    try {
+      const personId=Number(db.prepare('INSERT INTO campus_person DEFAULT VALUES').run().lastInsertRowid);
+      if(studentId)db.prepare('INSERT INTO person_student(person_id,student_id) VALUES(?,?)').run(personId,studentId);
+      if(facultyId)db.prepare('INSERT INTO person_faculty(person_id,faculty_id) VALUES(?,?)').run(personId,facultyId);
+      db.exec('COMMIT');service.refreshSnapshot?.();
+      return {status:201,body:db.prepare('SELECT * FROM v_person_eer WHERE person_id=?').get(personId)};
+    } catch(error){db.exec('ROLLBACK');throw error;}
+  }
+  const eerRole=path.match(/^\/eer\/people\/(\d+)\/roles(?:\/(student|faculty))?$/);
+  if(eerRole){
+    const personId=idValue(eerRole[1]);
+    if(!db.prepare('SELECT person_id FROM campus_person WHERE person_id=?').get(personId))fail(404,'Person not found');
+    if(method==='DELETE'&&eerRole[2]){const table=eerRole[2]==='student'?'person_student':'person_faculty';const result=db.prepare(`DELETE FROM ${table} WHERE person_id=?`).run(personId);if(!result.changes)fail(404,'Role link not found');service.refreshSnapshot?.();return {status:200,body:{detail:'Role link removed; legacy record retained'}};}
+    if(method!=='POST'||eerRole[2])fail(405,'Method not allowed');
+    objectBody(body,['student_id','faculty_id']);
+    const studentId=body.student_id==null||body.student_id===''?null:idValue(body.student_id);
+    const facultyId=body.faculty_id==null||body.faculty_id===''?null:idValue(body.faculty_id);
+    if(!studentId&&!facultyId)fail(422,'Choose a student or faculty record');
+    if(studentId&&!db.prepare('SELECT student_id FROM student WHERE student_id=?').get(studentId))fail(422,'Student does not exist');
+    if(facultyId&&!db.prepare('SELECT faculty_id FROM faculty WHERE faculty_id=?').get(facultyId))fail(422,'Faculty does not exist');
+    db.exec('BEGIN IMMEDIATE');
+    try{if(studentId)db.prepare('INSERT INTO person_student(person_id,student_id) VALUES(?,?)').run(personId,studentId);if(facultyId)db.prepare('INSERT INTO person_faculty(person_id,faculty_id) VALUES(?,?)').run(personId,facultyId);db.exec('COMMIT');service.refreshSnapshot?.();return {status:200,body:db.prepare('SELECT * FROM v_person_eer WHERE person_id=?').get(personId)};}catch(error){db.exec('ROLLBACK');throw error;}
+  }
+  const eerContact=path.match(/^\/eer\/people\/(\d+)\/contacts(?:\/([^/]+)\/([^/]+))?$/);
+  if(eerContact){
+    const personId=idValue(eerContact[1]);
+    if(!db.prepare('SELECT person_id FROM campus_person WHERE person_id=?').get(personId))fail(404,'Person not found');
+    if(method==='GET'&&!eerContact[2])return {status:200,body:db.prepare('SELECT contact_type,contact_value FROM person_contact WHERE person_id=? ORDER BY contact_type,contact_value').all(personId)};
+    if(method==='POST'&&!eerContact[2]){
+      objectBody(body,['contact_type','contact_value']);
+      const type=String(body.contact_type??'').trim(),value=String(body.contact_value??'').trim();
+      if(!['phone','email'].includes(type))fail(422,'Contact type must be phone or email');
+      if(!value||value.length>150||/[\\r\\n]/.test(value))fail(422,'Contact value must contain 1–150 characters on one line');
+      if(type==='email'&&!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(value))fail(422,'Enter a valid email address');
+      db.prepare('INSERT INTO person_contact(person_id,contact_type,contact_value) VALUES(?,?,?)').run(personId,type,value);
+      service.refreshSnapshot?.();return {status:201,body:{person_id:personId,contact_type:type,contact_value:value}};
+    }
+    if(method==='DELETE'&&eerContact[2]){
+      const type=decodeURIComponent(eerContact[2]),value=decodeURIComponent(eerContact[3]);
+      const result=db.prepare('DELETE FROM person_contact WHERE person_id=? AND contact_type=? AND contact_value=?').run(personId,type,value);
+      if(!result.changes)fail(404,'Contact not found');service.refreshSnapshot?.();return {status:200,body:{detail:'Contact deleted'}};
+    }
+    fail(405,'Method not allowed');
+  }
+  if(path==='/eer/people'&&method==='DELETE')fail(405,'People are retained as identity records; remove links or contacts instead');
   if (path === '/dbviewer' && method === 'GET') return { status: 200, body: { items: getSqlAudit(), limit: 200 } };
   if (path === '/admin/accounts' && method === 'POST') {
     objectBody(body, ['student_id', 'password']);
@@ -239,7 +328,7 @@ export async function handle(request, service) {
       if (request.headers.get('sec-fetch-site') === 'cross-site') fail(403, 'Cross-site mutation is not allowed');
     }
     service ??= api.getService();
-    initializePortal(service.db);
+    if(initializePortal(service.db)) service.refreshSnapshot?.();
     const token = request.headers.get('cookie')?.split(';').map(v => v.trim()).find(v => v.startsWith(`${cookieName}=`))?.slice(cookieName.length + 1);
     const tokenHash = token && /^[a-f0-9]{64}$/.test(token) ? hash(token) : '';
     const account = tokenHash ? service.db.prepare(`SELECT a.account_id,a.email,a.role,a.student_id FROM portal_session s

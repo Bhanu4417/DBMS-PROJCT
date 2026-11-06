@@ -21,6 +21,7 @@ import SemesterDetail from './screens/SemesterDetail';
 import OfferingDetail from './screens/OfferingDetail';
 import Reports from './screens/Reports';
 import Settings from './screens/Settings';
+import EerPeople from './screens/EerPeople';
 import NotFound from './screens/NotFound';
 const details={students:StudentDetail,faculty:FacultyDetail,courses:CourseDetail,semesters:SemesterDetail,offerings:OfferingDetail};
 export default function CollegeApp(){
@@ -37,6 +38,6 @@ export default function CollegeApp(){
   const session=<SessionControls user={user} onLogout={logout}/>;
   if(user.role==='student')return <ToastProvider><div className="min-h-screen bg-bg"><header className="flex flex-wrap items-center justify-between gap-4 border-b border-line bg-panel px-6 py-4"><h1>CampusOS <span className="text-sm text-muted">/ student portal</span></h1><div className="flex items-center gap-3"><button type="button" onClick={toggleTheme} aria-label={theme==='dark'?'Switch to light theme':'Switch to dark theme'} className="btn-ghost flex items-center gap-2 text-sm">{theme==='dark'?<Sun size={16}/>:<Moon size={16}/>}{theme==='dark'?'Light':'Dark'}</button>{session}</div></header><main className="mx-auto max-w-7xl p-4 sm:p-8"><Portal user={user}/></main></div></ToastProvider>;
   const [entity,id]=path.split('/').filter(Boolean),Detail=details[entity];
-  const page=!entity?<Dashboard/>:id&&Detail?<Detail/>:resources[entity]?<ResourcePage key={entity} config={resources[entity]}/>:entity==='reports'?<Reports/>:entity==='settings'?<Settings/>:entity==='dbviewer'?<DbViewer/>:entity==='accounts'?<AdminAccounts/>:<NotFound/>;
+  const page=!entity?<Dashboard/>:id&&Detail?<Detail/>:resources[entity]?<ResourcePage key={entity} config={resources[entity]}/>:entity==='eer'?<EerPeople/>:entity==='reports'?<Reports/>:entity==='settings'?<Settings/>:entity==='dbviewer'?<DbViewer/>:entity==='accounts'?<AdminAccounts/>:<NotFound/>;
   return <ToastProvider><AppLayout><div className="mb-5 flex justify-end">{session}</div>{page}</AppLayout></ToastProvider>;
 }

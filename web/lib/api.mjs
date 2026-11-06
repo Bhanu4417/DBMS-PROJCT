@@ -154,7 +154,7 @@ export function createService({ filename = defaultDatabaseFile, seed: shouldSeed
     const objects = db.prepare("SELECT type, name, sql FROM sqlite_master WHERE sql IS NOT NULL AND name NOT LIKE 'sqlite_%' AND name NOT IN ('portal_account','portal_session','login_throttle','portal_migration') AND tbl_name NOT IN ('portal_account','portal_session','login_throttle','portal_migration') ORDER BY CASE type WHEN 'table' THEN 0 WHEN 'index' THEN 1 ELSE 2 END, name").all();
     for (const object of objects.filter((item) => item.type === 'table')) lines.push(`${object.sql};`);
     const quote = (value) => value === null ? 'NULL' : typeof value === 'number' ? String(value) : typeof value === 'bigint' ? String(value) : value instanceof Uint8Array ? `X'${Buffer.from(value).toString('hex')}'` : `'${String(value).replaceAll("'", "''")}'`;
-    for (const table of [...Object.values(resources).map(([table])=>table),'attendance','library_book','library_loan']) {
+    for (const table of [...Object.values(resources).map(([table])=>table),'attendance','library_book','library_loan','campus_person','person_student','person_faculty','person_contact']) {
       const columns = db.prepare(`PRAGMA table_info("${table}")`).all().map((column) => column.name);
       if (!columns.length) continue;
       const quotedColumns = columns.map((column) => `"${column.replaceAll('"', '""')}"`).join(', ');
@@ -162,6 +162,7 @@ export function createService({ filename = defaultDatabaseFile, seed: shouldSeed
         lines.push(`INSERT INTO "${table}" (${quotedColumns}) VALUES (${columns.map((column) => quote(row[column])).join(', ')});`);
       }
     }
+    for (const object of objects.filter((item) => item.type === 'view')) lines.push(`${object.sql};`);
     for (const object of objects.filter((item) => item.type === 'index' || item.type === 'trigger')) lines.push(`${object.sql};`);
     lines.push('COMMIT;', 'PRAGMA ignore_check_constraints = OFF;', 'PRAGMA foreign_keys = ON;', '');
     return lines.join('\n');

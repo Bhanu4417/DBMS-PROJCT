@@ -33,6 +33,7 @@ export const NAV_ITEMS = [
   { to: '/library-books', label: 'Library books', icon: BookOpen },
   { to: '/library-loans', label: 'Library loans', icon: ClipboardList },
   { to: '/accounts', label: 'Student access', icon: Users },
+  { to: '/eer', label: 'EER Identity', icon: UserCheck },
   { to: '/dbviewer', label: 'SQL activity', icon: Layers },
   { to: '/settings', label: 'Settings', icon: Settings },
 ];

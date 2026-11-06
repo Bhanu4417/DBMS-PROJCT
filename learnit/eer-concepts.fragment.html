@@ -11,16 +11,16 @@
       <tr><td>Identifying relationship</td><td>Double diamond</td><td>Connects a classic weak entity to its owner; the weak side participates totally.</td></tr>
       <tr><td>Simple / single-valued attribute</td><td>Single oval</td><td>Simple means not decomposed in this model; single-valued means at most one value per entity. These are different properties.</td></tr>
       <tr><td>Composite attribute</td><td>Oval branching to component ovals</td><td>Name → first_name, last_name. Components carry the stored detail.</td></tr>
-      <tr><td>Multivalued attribute</td><td>Double oval</td><td>A set of values for one entity: proposed Student phones, not the actual single phone column.</td></tr>
+      <tr><td>Multivalued attribute</td><td>Double oval</td><td>Person phone/email values are implemented as weak <code>person_contact</code> rows; these are separate from legacy <code>student.phone</code>.</td></tr>
       <tr><td>Stored / derived attribute</td><td>Ordinary oval / dashed oval</td><td>date_of_birth is stored; age can be calculated from it and an as-of date.</td></tr>
-      <tr><td>Key / partial key</td><td>Solid / dashed underline</td><td>A key identifies an entity globally; a weak entity’s partial key distinguishes it only within one owner.</td></tr>
+      <tr><td>Key / partial key</td><td>Solid / dashed underline</td><td>A key identifies an entity globally; the implemented contact partial key (contact_type, contact_value) distinguishes contact rows within person_id.</td></tr>
     </tbody>
   </table>
   <div class="columns">
     <div><h3>Cardinality is not participation</h3><p>1:1, 1:N and M:N describe maximum association counts. A single connector indicates partial participation; a double connector indicates total participation. Min–max labels such as (0,N) and (1,1) make both bounds explicit. Avoid silently mixing Chen symbols with crow’s-foot endpoints.</p></div>
     <div><h3>Keys need business meaning too</h3><p>Student’s student_id is the selected surrogate primary key. In the current schema, enrollment_number and email are also NOT NULL and UNIQUE candidate keys. A composite key contains multiple attributes; a composite attribute contains meaningful components. Neither term implies the other.</p></div>
   </div>
-  <p class="note"><strong>Scope and evidence:</strong> current facts below refer to the Next.js/SQLite build, particularly web/lib/schema.mjs and the exported CampusOS schema. The independent PostgreSQL build has its own DDL and runtime behavior; it is not the database behind the SQLite build. Proposed diagrams are teaching models, not migrations or claims of deployed features.</p>
+  <p class="note"><strong>Scope and evidence:</strong> the existing academic identities remain in <code>student</code> and <code>faculty</code>. The website now also implements an additive SQLite EER identity layer: <code>campus_person</code>, <code>person_student</code>, <code>person_faculty</code> and weak <code>person_contact</code>, managed at <code>/eer</code>. It does not merge or replace the original records. The independent PostgreSQL build is unchanged.</p>
 </section>
 
 <section class="page" id="eer-attributes" aria-labelledby="eer-attributes-title">
@@ -29,7 +29,7 @@
   <figure>
     <svg xmlns="http://www.w3.org/2000/svg" width="250mm" height="46mm" viewBox="0 0 1000 184" role="img" aria-labelledby="eer-attr-svg-title eer-attr-svg-desc">
       <title id="eer-attr-svg-title">Chen Student attribute illustration</title>
-      <desc id="eer-attr-svg-desc">Student rectangle connects to an underlined student_id oval, composite name with first and last components, actual single phone, proposed double-oval phones, stored date of birth and dashed derived age.</desc>
+      <desc id="eer-attr-svg-desc">Student rectangle connects to an underlined student_id oval, composite name with first and last components, actual single phone, implemented Person contact rows shown by the double-oval phones, stored date of birth and dashed derived age.</desc>
       <g fill="none" stroke="#334155" stroke-width="1.6">
         <path d="M440 94 L130 40 M440 100 L130 122 M490 76 L425 35 M425 17 L270 17 M480 17 L585 17 M560 90 L775 40 M560 108 L775 115 M500 120 L500 155"/>
         <rect x="440" y="76" width="120" height="44" fill="#e8f2f1"/>
@@ -43,10 +43,10 @@
       <g fill="#172b3a" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">
         <text x="500" y="103">Student</text><text x="130" y="44">student_id</text><text x="130" y="126">phone (actual)</text>
         <text x="425" y="29">name</text><text x="270" y="29">first_name</text><text x="585" y="29">last_name</text>
-        <text x="775" y="44">phones (PROPOSED)</text><text x="775" y="119">age (derived only)</text><text x="500" y="164">date_of_birth</text>
+        <text x="775" y="44">Person contacts (implemented)</text><text x="775" y="119">age (derived only)</text><text x="500" y="164">date_of_birth</text>
       </g>
     </svg>
-    <figcaption>Ordinary ovals = stored components / single values; double oval = proposed set; dashed oval = calculated value. The name oval is conceptual, not an extra stored column.</figcaption>
+    <figcaption>Ordinary ovals = stored components / single values; double oval = multivalued Person contacts in person_contact; dashed oval = calculated value. The name oval is conceptual, not an extra stored column.</figcaption>
   </figure>
   <div class="columns">
     <div>
@@ -57,10 +57,10 @@
       <p>date_of_birth is stored and nullable. Age is <strong>not currently stored</strong>; the dashed oval illustrates a possible calculation, not a verified existing feature. Compute completed years as of a stated date, accounting for whether that year’s birthday has occurred. Subtracting birth year alone is inaccurate.</p>
     </div>
     <div>
-      <h3>Proposed multivalue → child relation</h3>
-      <p>To support several numbers, introduce <code>student_phone(student_id, phone)</code>, with composite PK <code>(student_id, phone)</code> and FK <code>student_id → student(student_id)</code>. Require both columns; each row holds one number, and the PK prevents duplicate numbers for the same student.</p>
-      <p>Zero rows represents no recorded phones. Optional metadata such as label or verified_at belongs on the child relation. A “one preferred number” rule needs additional enforcement. If a surrogate phone_id is chosen, retain UNIQUE(student_id, phone).</p>
-      <p>Migrate existing non-NULL phone values deliberately, adapt forms and queries, then decide whether to remove the old field. Do not keep two competing sources of truth. This child table is <strong>proposed only</strong>.</p>
+      <h3>Implemented multivalue → weak child relation</h3>
+      <p>The optional <code>person_contact(person_id, contact_type, contact_value)</code> relation is implemented for the added Person identity layer. It permits multiple values per person. The legacy student.phone field remains single-valued and unchanged.</p>
+      <p>Zero contact rows represents no recorded contact. The <code>/eer</code> admin UI lets administrators add/remove phone and email values. The same number can occur for different Persons; duplicate type/value within one Person is rejected.</p>
+      <p>This contact relation is an optional feature of the added Person identity layer, not a migration of student.phone.</p>
     </div>
   </div>
   <p class="note"><strong>Viva distinction:</strong> composite asks “what parts?”; multivalued asks “how many values?”; derived asks “computed from what?” A name can be composite and single-valued. An unknown birth date should normally yield unknown age; do not invent zero or store a value that becomes stale each birthday.</p>
@@ -69,11 +69,11 @@
 <section class="page" id="eer-isa" aria-labelledby="eer-isa-title">
   <p class="kicker">Inheritance and design direction · 03 / 06</p>
   <h2 id="eer-isa-title">Specialization ↓ · Generalization ↑</h2>
-  <p class="note"><strong>PROPOSED ONLY:</strong> CampusOS has separate student and faculty entities with independent primary keys. There is <strong>no Person supertype in the current implementation</strong>. Matching numeric student_id and faculty_id values do not identify the same human.</p>
+  <p class="note">Implemented EER extension (Next.js / SQLite only): <code>campus_person</code> is the optional Person supertype; <code>person_student</code> and <code>person_faculty</code> link existing records. Membership is partial and overlapping; no legacy records are automatically merged.</p>
   <figure>
     <svg xmlns="http://www.w3.org/2000/svg" width="250mm" height="45mm" viewBox="0 0 1000 180" role="img" aria-labelledby="eer-isa-svg-title eer-isa-svg-desc">
       <title id="eer-isa-svg-title">Proposed Person ISA Student and Faculty</title>
-      <desc id="eer-isa-svg-desc">A Person rectangle connects by a single line to an ISA triangle, branching to Student and Faculty rectangles. This depicts a proposed partial hierarchy; overlap or disjointness is not selected.</desc>
+      <desc id="eer-isa-svg-desc">CampusOS additive extension: campus_person supertype links by primary-key subtype relations to existing Student and Faculty records. Partial membership is allowed, and a person can have both roles.</desc>
       <g fill="none" stroke="#334155" stroke-width="1.8">
         <rect x="420" y="5" width="160" height="35" fill="#e8f2f1"/>
         <path d="M500 40 V58 M500 58 L455 108 H545 Z M475 108 L335 138 M525 108 L665 138"/>
@@ -82,10 +82,10 @@
       <g fill="#172b3a" font-family="Arial, sans-serif" font-size="15" text-anchor="middle">
         <text x="500" y="28">Person</text><text x="500" y="96">ISA</text><text x="335" y="161">Student</text><text x="665" y="161">Faculty</text>
         <text x="195" y="61">Top-down: specialization</text><text x="795" y="61">Bottom-up: generalization</text>
-        <text x="500" y="128" font-size="12">PROPOSED hierarchy</text>
+        <text x="500" y="128" font-size="12">IMPLEMENTED · PARTIAL · OVERLAPPING</text>
       </g>
     </svg>
-    <figcaption>Chen-style EER extension: rectangles and an ISA triangle. The single supertype connector depicts partial completeness; disjointness/overlap remains a separate design decision.</figcaption>
+    <figcaption>Implemented optional identity layer; the ISA describes links from one added Person key to legacy student/faculty rows. Role records are not recreated or merged.</figcaption>
   </figure>
   <div class="columns">
     <div><h3>Specialization: start broad, discover roles</h3><p>Start with Person and identify more specific entity types: Student has enrollment_number and admission_year; Faculty has employee_code and designation. Shared names and contact facts could move to Person. Each subtype is a subset of Person and inherits its identity, common attributes and applicable relationships.</p><p>The subtype is not a second person. In a shared-key mapping, Student.person_id identifies the same entity as Person.person_id. This is an <strong>is-a</strong> relationship, unlike Student belongs to Department, which associates different entities.</p></div>
@@ -98,7 +98,7 @@
 <section class="page" id="eer-constraints" aria-labelledby="eer-constraints-title">
   <p class="kicker">Two independent choices · 04 / 06</p>
   <h2 id="eer-constraints-title">Membership constraints and inheritance mapping</h2>
-  <p><strong>Disjointness</strong> controls simultaneous subtype membership. <strong>Completeness</strong> controls whether every supertype entity must be classified. Neither choice follows automatically from the other. All Person examples on this page remain <strong>proposed only</strong>.</p>
+  <p><strong>Disjointness</strong> controls simultaneous subtype membership. <strong>Completeness</strong> controls whether every supertype entity must be classified. Neither choice follows automatically from the other. CampusOS implements <strong>partial, overlapping</strong> membership: a Person can have no linked subtype, Student only, Faculty only, or both.</p>
   <table>
     <thead><tr><th scope="col">Combination</th><th scope="col">Permitted membership per Person</th><th scope="col">Possible policy</th></tr></thead>
     <tbody>
@@ -113,16 +113,16 @@
   <table>
     <thead><tr><th scope="col">Strategy</th><th scope="col">Mapping and strengths</th><th scope="col">Constraints / limitations</th></tr></thead>
     <tbody>
-      <tr><td>Supertype + subtype tables</td><td>Person(person_id PK, common facts); Student(person_id PK/FK, student facts); Faculty(person_id PK/FK, faculty facts). Common identity is stored once.</td><td>Supports all four combinations with appropriate enforcement. Base PK/FK structure alone permits partial, overlapping membership; shared reads need joins.</td></tr>
+      <tr><td>Supertype + subtype tables</td><td>CampusOS additive mapping: <code>campus_person(person_id)</code>; <code>person_student(person_id PK/FK, student_id UNIQUE FK)</code>; <code>person_faculty(person_id PK/FK, faculty_id UNIQUE FK)</code>. Common identity for explicit matches; legacy facts stay intact.</td><td>Supports partial, overlapping roles. Explicitly pairing two legacy rows asserts they represent the same real individual; do not match automatically by name/email.</td></tr>
       <tr><td>One combined table</td><td>Person holds common and subtype fields. A NOT NULL discriminator can represent total, disjoint membership.</td><td>Conditional CHECKs validate relevant fields. Partial membership needs a “neither” representation; overlap needs multiple flags or memberships, not one exclusive role value.</td></tr>
       <tr><td>Concrete subtype tables only</td><td>Copy common attributes into Student and Faculty; no Person table. Natural for a total, disjoint hierarchy with independent subtype access.</td><td>Partial membership has nowhere to go. Overlap risks duplicated shared facts and needs coordinated identity. Cross-subtype queries need UNION and global-key planning.</td></tr>
     </tbody>
   </table>
   <div class="columns">
-    <div><h3>What a shared-key FK guarantees</h3><p>Every subtype row has an existing Person; each subtype PK allows at most one row per Person in that table. It does not require a subtype for every Person and does not prohibit the same ID in both subtype tables.</p></div>
-    <div><h3>What needs more enforcement</h3><p>Total membership and cross-table exclusivity need a suitable schema strategy or carefully designed transactional checks/triggers. SQLite does not provide PostgreSQL-style deferred constraint triggers. Validate rules at a safe transaction boundary; naive immediate checks can reject a valid multi-step insertion.</p></div>
+    <div><h3>What a shared-key FK guarantees</h3><p>Every linked subtype row has an existing Person; each Person can link to at most one row in each subtype. A Person can have no linked roles or both roles. Student and faculty identities remain the legacy IDs.</p></div>
+    <div><h3>What needs more enforcement</h3><p>This design intentionally permits no subtype (partial) and dual subtype membership (overlapping). UNIQUE role FKs prevent linking the same legacy Student or Faculty to more than one Person. Choosing to link a student/faculty pair is an explicit identity assertion, not an automatic inference.</p></div>
   </div>
-  <p class="note"><strong>Viva:</strong> “A foreign key points from subtype to supertype. It proves the parent exists, not that every parent has a child. Disjointness is another rule entirely.”</p>
+  <p class="note"><strong>Viva:</strong> “A foreign key proves each linked subtype points to a Person. This implementation intentionally permits a Person with no subtype and permits both roles; it uniquely associates each legacy student/faculty record.”</p>
 </section>
 
 <section class="page" id="eer-relational" aria-labelledby="eer-relational-title">
@@ -130,7 +130,7 @@
   <h2 id="eer-relational-title">Associative does not mean classically weak</h2>
   <div class="columns">
     <div><h3>Associative entity: a relationship with facts</h3><p>Enrollment links Student and CourseOffering and records enrollment_date and enrollment_status. Current CampusOS uses enrollment_id as surrogate PK and UNIQUE(student_id, offering_id) to prevent duplicate registration. FacultyAssignment similarly has assignment_id plus UNIQUE(faculty_id, offering_id).</p><p>These are associative entities implementing M:N relationships. Their required foreign keys make them dependent on valid participants, but they are <strong>not classic Chen weak entities</strong> merely because they reference parents. A surrogate key does not remove the need for a business uniqueness rule.</p></div>
-    <div><h3>Classic weak entity: owner-relative identity</h3><p>As a hypothetical example, Dependent might have dependent_name as a partial key within an Employee. Its full relational key is (employee_id, dependent_name). Draw Dependent as a double rectangle, the identifying relationship as a double diamond, and total participation on the weak side.</p><p>This example assumes names distinguish dependents within each employee; otherwise choose a better partial key. It is not a current CampusOS table. Existence dependency, mandatory FKs or ON DELETE CASCADE alone do not establish classic weak identification.</p></div>
+    <div><h3>Classic weak entity: owner-relative identity</h3><p>As a concrete example, <code>person_contact</code> is a weak entity. Its composite primary key is <code>(person_id, contact_type, contact_value)</code>; <code>contact_value</code> is owner-relative, so the same phone can occur for two people, but cannot be duplicated for one person and type. The owner FK and <code>ON DELETE CASCADE</code> express dependence; the identifying key is what establishes the weak-entity pattern.</p><p>Classic Chen weak notation draws a double rectangle and an identifying double diamond; in the relational mapping, the owner key participates in the weak row’s primary key. The UI at <code>/eer</code> lets an administrator add/remove contact rows.</p></div>
   </div>
   <h3>Conceptual → relational translation checklist</h3>
   <table>
@@ -154,12 +154,13 @@
     <thead><tr><th scope="col">Examiner asks</th><th scope="col">Answer to give</th></tr></thead>
     <tbody>
       <tr><td>Is Student.name implemented as a composite attribute?</td><td>Conceptually yes: name decomposes into first_name and last_name. Physically those are separate stored columns; there is no stored name object or required extra full-name column.</td></tr>
-      <tr><td>Is phone multivalued in your project?</td><td>No. Current student.phone stores one optional value. The double-oval phones example is proposed; several numbers would use a child table with student_id FK and uniqueness per student/number.</td></tr>
+      <tr><td>Is phone multivalued in your project?</td><td>Legacy student.phone remains one optional value. Person contacts are multivalued via person_contact; the addition does not migrate or alter the legacy field.</td></tr>
       <tr><td>Where is age stored?</td><td>It is not currently stored. date_of_birth is the stored input; age could be derived for an as-of date. Account for birthdays and unknown dates rather than subtracting years blindly.</td></tr>
       <tr><td>Does every attribute have just one classification?</td><td>No. The dimensions are independent: name can be composite and single-valued; date_of_birth is simple, single-valued and stored. A key is an identification role, not a separate data type.</td></tr>
-      <tr><td>Specialization versus generalization?</td><td>Specialization starts with Person and discovers Student/Faculty top-down. Generalization starts with those types and extracts Person bottom-up. Both can yield the same hierarchy; Person is proposed, not implemented here.</td></tr>
-      <tr><td>Can a person be Student and Faculty?</td><td>A proposed overlapping hierarchy can represent both with one shared identity. Current tables use independent identities; similar names, emails or coincident ID values do not create an explicit identity link.</td></tr>
-      <tr><td>Does the shared PK/FK enforce the whole hierarchy?</td><td>No. It ensures each subtype has a Person and unique membership within that subtype. Disjointness and total completeness require additional enforcement or a different mapping strategy.</td></tr>
+      <tr><td>Specialization versus generalization?</td><td>Specialization starts with Person and defines Student/Faculty subtypes top-down; generalization starts with Student/Faculty and abstracts Person bottom-up. The additive Person ISA mapping is now implemented at /eer.</td></tr>
+      <tr><td>Can a person be Student and Faculty?</td><td>Yes in the explicit, additive Person layer: both subtype links can point to one campus_person.person_id. Existing student/faculty records remain unchanged and are never paired automatically.</td></tr>
+      <tr><td>Is the Person ISA implemented?</td><td>Yes, as an additive extension of the Next.js/SQLite build: <code>campus_person</code> with <code>person_student</code> and <code>person_faculty</code>. It is partial and overlapping. Explicit links only; no automatic identity merge.</td></tr>
+      <tr><td>Where is a partial key implemented?</td><td><code>person_contact</code> at <code>/eer</code>: the full key is (person_id, contact_type, contact_value). A phone/email value identifies a weak contact only within its owning Person.</td></tr>
       <tr><td>Why is Enrollment not a weak entity?</td><td>It represents an association, carries relationship facts and has its own surrogate PK. Classic weak identification uses an owner key plus a partial key. Required references alone are not that definition.</td></tr>
       <tr><td>Why keep UNIQUE when you already have an ID?</td><td>enrollment_id prevents duplicate IDs, not duplicate student/offering pairs. UNIQUE(student_id, offering_id) protects the business identity. The same principle applies to FacultyAssignment.</td></tr>
       <tr><td>Does NOT NULL FK mean total participation everywhere?</td><td>Only for that referencing side: every child must have a valid parent. It does not require each parent to have a child. Always state the direction of the guarantee.</td></tr>
@@ -168,6 +169,6 @@
     </tbody>
   </table>
   <h3>A confident closing answer</h3>
-  <p>“Our implemented model has independent Student and Faculty entities, surrogate-key association tables and database constraints. Composite name explains existing first/last columns; multiple phones and Person ISA are proposed extensions. Age is derived in the conceptual example, not currently stored. I distinguish what the diagram means from what the schema actually enforces.”</p>
-  <p class="note"><strong>Evidence boundary:</strong> conceptual examples explain alternatives, not completed features. Verify engine-specific SQL against the relevant independent build.</p>
+  <p>“We added an optional Person supertype with Student and Faculty subtype links, explicitly partial and overlapping. Original academic tables are unchanged, and administrators link existing records only when identity is verified. A contact’s value is a weak-entity partial key within its Person. The feature is an additive SQLite extension, not a redesign of enrollment or login.”</p>
+  <p class="note"><strong>Evidence boundary:</strong> this additive identity and contact implementation is in the Next.js/SQLite build. The independent PostgreSQL/FastAPI build is unchanged.</p>
 </section>

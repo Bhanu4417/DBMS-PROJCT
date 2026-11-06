@@ -128,6 +128,32 @@ test('admin provisions only student accounts with database email; sessions persi
   assert.equal((await call('GET', 'portal/me', undefined, expired.cookie)).status, 401);
 });
 
+test('optional Person ISA layer is admin-only, allows partial/overlapping roles, and uses owner-relative contact keys', async () => {
+  assert.equal((await call('GET','eer/people',undefined,student.cookie)).status,403);
+  const empty=await call('POST','eer/people',{},admin.cookie);
+  assert.equal(empty.status,201);
+  const emptyId=empty.body.person_id;
+  assert.equal(empty.body.student_id,null); assert.equal(empty.body.faculty_id,null);
+  const partial=await call('POST',`eer/people/${emptyId}/roles`,{student_id:1},admin.cookie);
+  assert.equal(partial.status,200); assert.equal(partial.body.student_id,1); assert.equal(partial.body.faculty_id,null);
+  const role=await call('POST',`eer/people/${emptyId}/roles`,{faculty_id:1},admin.cookie);
+  assert.equal(role.status,200); assert.equal(role.body.student_id,1); assert.equal(role.body.faculty_id,1);
+  const second=await call('POST','eer/people',{student_id:2},admin.cookie);
+  assert.equal(second.status,201); assert.equal(second.body.faculty_id,null);
+  assert.equal((await call('POST','eer/people',{student_id:1},admin.cookie)).status,409);
+  assert.equal((await call('POST',`eer/people/${emptyId}/contacts`,{contact_type:'phone',contact_value:'  +1 555 123  '},admin.cookie)).status,201);
+  assert.equal((await call('POST',`eer/people/${emptyId}/contacts`,{contact_type:'phone',contact_value:'+1 555 123'},admin.cookie)).status,409);
+  assert.equal((await call('POST',`eer/people/${second.body.person_id}/contacts`,{contact_type:'phone',contact_value:'+1 555 123'},admin.cookie)).status,201);
+  assert.equal((await call('POST',`eer/people/${emptyId}/contacts`,{contact_type:'fax',contact_value:'123'},admin.cookie)).status,422);
+  assert.equal((await call('GET',`eer/people/${emptyId}/contacts`,undefined,admin.cookie)).body.length,1);
+  const list=await call('GET','eer/people',undefined,admin.cookie);
+  assert.equal(list.body.total,2);
+  const snapshot=await call('GET','database/export.sql',undefined,admin.cookie);
+  assert.match(snapshot.body,/CREATE TABLE campus_person/);
+  assert.match(snapshot.body,/CREATE TABLE person_contact/);
+  assert.match(snapshot.body,/CREATE VIEW v_person_eer/);
+});
+
 test('login throttling stores only hashed identifiers and generic errors', async () => {
   for (let i = 0; i < 5; i++) {
     const result = await call('POST', 'auth/login', { email: 'nobody@campus.local', password: 'wrong' });

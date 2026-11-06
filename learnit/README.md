@@ -8,19 +8,11 @@
 - [10-minute use-case presentation (PDF)](usecase.pdf) — frontend/backend developer presentation: stack choices, component architecture, integration, admin/student tabs and SQL activity; brief PK/FK reference, no ER diagrams. [Editable HTML](usecase.html).
 - [Short viva speaking guide (PDF)](Viva_Guide.pdf) · [Editable HTML](Viva_Guide.html).
 
-## Current extended implementation (16 tables)
+## Current implementation (20 tables)
 
-Start with [Portal ER explanation](Portal_ER.md): 12 domain tables plus 4 authentication/support tables, derived from the current `web/lib/schema.mjs` and `web/lib/portal.mjs`.
-
-- **Conceptual domain ER (Chen-inspired):** [SVG / editable source](CampusOS_Conceptual_ER.svg) · [PNG](CampusOS_Conceptual_ER.png) · [PDF](CampusOS_Conceptual_ER.pdf)
-- **Complete relational ER:** [SVG / editable source](CampusOS_Relational_ER.svg) · [PNG](CampusOS_Relational_ER.png)
-- [Exact schema inventory](CampusOS_schema.json) · [Reproducible Chromium renderer](render-campus-er.mjs)
-
-```sh
-node learnit/render-campus-er.mjs
-```
-
-Uses the existing `web` Puppeteer dependency and system Chromium; no installation required. The conceptual diagram adopts the supplied hospital report's page-2 notation, not its topology or inheritance. See the explanation for precise cardinalities, constraints and role semantics.
+- [Complete ER/EER Atlas (PDF)](CampusOS_ER_EER_Atlas.pdf) — all 20 tables and attributes, including the implemented optional Person ISA layer and weak Person-contact partial key; relationship ledger, Chen diagrams and detailed EER guide. [Editable HTML](CampusOS_ER_EER_Atlas.html) · [Renderer](render-er-eer-atlas.mjs) · [EER chapter source](eer-concepts.fragment.html).
+- [Portal ER explanation](Portal_ER.md): the original core schema and portal relationships. The extra Person identity/contact layer is documented in the atlas and managed in the website at `/eer`.
+- Historical academic9 diagrams and explanations below are preserved as educational historical materials; they do **not** describe the new additive Person/contact layer.
 
 ## Historical academic9 study pack
 
