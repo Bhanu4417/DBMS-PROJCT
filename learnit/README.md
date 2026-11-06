@@ -10,7 +10,8 @@
 
 ## Current implementation (20 tables)
 
-- [Complete current ER/EER diagram and admin SQL guide (PDF)](CampusOS_ER_EER_v2.pdf) — 20 SQLite tables, four detailed relationship diagrams including Person ISA/weak contact, entity dictionaries, cardinalities, and SQL used to find/display names. [Editable HTML](CampusOS_ER_EER_v2.html) · [Renderer](render-campus-er-v2.mjs) · [Admin SQL guide source](Admin_SQL_Guide.md).
+- [Read-only SQLite query worksheet](Explore_CampusOS_SQL.sql) — ready-to-run examples for checking saved student/enrollment/grade records and Person/contact data. [Admin panel SQL guide](Admin_SQL_Guide.md) explains actual application queries versus standalone examples.
+
 
 
 - [Portal ER explanation](Portal_ER.md): core portal tables and relationships. The extra Person/contact layer is documented in the current v2 atlas and managed in the website at `/eer`.
