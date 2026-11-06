@@ -10,11 +10,16 @@
 
 ## Current implementation (20 tables)
 
-- [Complete ER/EER Atlas (PDF)](CampusOS_ER_EER_Atlas.pdf) — all 20 tables and attributes, including the implemented optional Person ISA layer and weak Person-contact partial key; relationship ledger, Chen diagrams and detailed EER guide. [Editable HTML](CampusOS_ER_EER_Atlas.html) · [Renderer](render-er-eer-atlas.mjs) · [EER chapter source](eer-concepts.fragment.html).
-- [Portal ER explanation](Portal_ER.md): the original core schema and portal relationships. The extra Person identity/contact layer is documented in the atlas and managed in the website at `/eer`.
-- Historical academic9 diagrams and explanations below are preserved as educational historical materials; they do **not** describe the new additive Person/contact layer.
+- [Complete current ER/EER diagram and admin SQL guide (PDF)](CampusOS_ER_EER_v2.pdf) — 20 SQLite tables, four detailed relationship diagrams including Person ISA/weak contact, entity dictionaries, cardinalities, and SQL used to find/display names. [Editable HTML](CampusOS_ER_EER_v2.html) · [Renderer](render-campus-er-v2.mjs) · [Admin SQL guide source](Admin_SQL_Guide.md).
 
-## Historical academic9 study pack
+
+- [Portal ER explanation](Portal_ER.md): core portal tables and relationships. The extra Person/contact layer is documented in the current v2 atlas and managed in the website at `/eer`.
+- Historical academic9 diagrams and chapters below are preserved unchanged; they do **not** describe the additive Person/contact layer.
+
+
+## Normalization and model documentation
+
+The detailed current SQLite entity dictionary and EER extension are in [CampusOS_ER_EER_v2.pdf](CampusOS_ER_EER_v2.pdf); old nine-table diagrams below are historical.
 
 The original nine-table diagrams and chapters below are preserved unchanged. They do **not** cover the current portal's attendance, library or authentication tables.
 
