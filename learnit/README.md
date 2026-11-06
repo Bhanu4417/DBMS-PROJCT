@@ -1,5 +1,10 @@
 # Learnit: CampusOS study pack
 
+## Presentation guides
+
+- [10-minute use-case presentation (PDF)](usecase.pdf) — every admin/student tab, update flow, SQL log semantics and UI-command → API → SQL examples. [Editable HTML](usecase.html).
+- [Short viva speaking guide (PDF)](Viva_Guide.pdf) · [Editable HTML](Viva_Guide.html).
+
 ## Current extended implementation (16 tables)
 
 Start with [Portal ER explanation](Portal_ER.md): 12 domain tables plus 4 authentication/support tables, derived from the current `web/lib/schema.mjs` and `web/lib/portal.mjs`.
