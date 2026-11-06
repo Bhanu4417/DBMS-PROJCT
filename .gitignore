@@ -36,3 +36,4 @@ database/live_snapshot.sql.*.tmp
 
 # Local presentation browser profiles and logs
 .presentation/
+.theta/

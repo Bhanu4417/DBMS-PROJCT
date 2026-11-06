@@ -4,7 +4,7 @@ const STORAGE_KEY = 'campusos-theme';
 
 /** Dark is the default theme; the choice is remembered in the browser. */
 export function useTheme() {
-  const [theme, setTheme] = useState(() => localStorage.getItem(STORAGE_KEY) || 'dark');
+  const [theme, setTheme] = useState(() => typeof window !== 'undefined' && localStorage.getItem(STORAGE_KEY) || 'dark');
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;

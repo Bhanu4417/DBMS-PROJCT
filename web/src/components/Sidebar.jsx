@@ -108,7 +108,7 @@ export default function Sidebar({ collapsed, onToggle }) {
 }
 
 export function useSidebarState() {
-  const [collapsed, setCollapsed] = useState(() => localStorage.getItem('campusos-sidebar') === '1');
+  const [collapsed, setCollapsed] = useState(() => typeof window !== 'undefined' && localStorage.getItem('campusos-sidebar') === '1');
   useEffect(() => {
     localStorage.setItem('campusos-sidebar', collapsed ? '1' : '0');
   }, [collapsed]);
