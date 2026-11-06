@@ -2,7 +2,7 @@
 
 ## Presentation guides
 
-- [10-minute use-case presentation (PDF)](usecase.pdf) — every admin/student tab, update flow, SQL log semantics and UI-command → API → SQL examples. [Editable HTML](usecase.html).
+- [10-minute use-case presentation (PDF)](usecase.pdf) — frontend/backend developer presentation: stack choices, component architecture, integration, admin/student tabs and SQL activity; brief PK/FK reference, no ER diagrams. [Editable HTML](usecase.html).
 - [Short viva speaking guide (PDF)](Viva_Guide.pdf) · [Editable HTML](Viva_Guide.html).
 
 ## Current extended implementation (16 tables)
