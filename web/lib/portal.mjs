@@ -66,18 +66,9 @@ export function initializePortal(db) {
       date TEXT NOT NULL, status TEXT NOT NULL CHECK(status IN ('Present','Absent','Late','Excused')),
       UNIQUE(enrollment_id,date)
     );
-    CREATE TABLE IF NOT EXISTS library_book (
-      book_id INTEGER PRIMARY KEY, isbn TEXT NOT NULL UNIQUE, title TEXT NOT NULL, author TEXT NOT NULL,
-      copies INTEGER NOT NULL CHECK(copies > 0)
-    );
-    CREATE TABLE IF NOT EXISTS library_loan (
-      loan_id INTEGER PRIMARY KEY, student_id INTEGER NOT NULL REFERENCES student(student_id) ON DELETE RESTRICT,
-      book_id INTEGER NOT NULL REFERENCES library_book(book_id) ON DELETE RESTRICT,
-      borrowed_date TEXT NOT NULL, due_date TEXT NOT NULL, returned_date TEXT,
-      CHECK(due_date >= borrowed_date), CHECK(returned_date IS NULL OR returned_date >= borrowed_date)
-    );
     CREATE INDEX IF NOT EXISTS idx_portal_session_expiry ON portal_session(expires_at);
-    CREATE INDEX IF NOT EXISTS idx_library_loan_student ON library_loan(student_id);
+    DROP TABLE IF EXISTS library_loan;
+    DROP TABLE IF EXISTS library_book;
   `);
   try {
     const seedAccount = (email, role, studentId, password) => {
@@ -92,22 +83,12 @@ export function initializePortal(db) {
     // A durable marker prevents deleted demo loans from reappearing on restart.
     db.exec('CREATE TABLE IF NOT EXISTS portal_migration (name TEXT PRIMARY KEY)');
     if (!db.prepare('SELECT name FROM portal_migration WHERE name=?').get('demo-v1')) {
-      for (const [isbn, title, author, copies] of [
-        ['9780133970777', 'Fundamentals of Database Systems', 'Ramez Elmasri and Shamkant Navathe', 5],
-        ['9780262046305', 'Introduction to Algorithms', 'Thomas H. Cormen et al.', 3],
-        ['9780133594140', 'Computer Networks', 'Andrew S. Tanenbaum', 4],
-      ]) db.prepare('INSERT OR IGNORE INTO library_book(isbn,title,author,copies) VALUES(?,?,?,?)').run(isbn, title, author, copies);
       const enrollments = db.prepare('SELECT enrollment_id FROM enrollment ORDER BY enrollment_id LIMIT 12').all();
       for (const [index, enrollment] of enrollments.entries()) {
         for (const date of ['2026-02-02', '2026-02-03', '2026-02-04']) {
           db.prepare('INSERT OR IGNORE INTO attendance(enrollment_id,date,status) VALUES(?,?,?)')
             .run(enrollment.enrollment_id, date, ['Present', 'Present', 'Late', 'Absent', 'Excused'][index % 5]);
         }
-      }
-      if (student) {
-        const book = db.prepare('SELECT book_id FROM library_book WHERE isbn=?').get('9780133970777');
-        db.prepare('INSERT INTO library_loan(student_id,book_id,borrowed_date,due_date,returned_date) VALUES(1,?,?,?,NULL)')
-          .run(book.book_id, '2026-02-01', '2026-02-15');
       }
       db.prepare('INSERT INTO portal_migration(name) VALUES(?)').run('demo-v1');
     }
@@ -119,8 +100,6 @@ export function initializePortal(db) {
 
 const definitions = {
   attendance: { table: 'attendance', pk: 'attendance_id', fields: ['enrollment_id', 'date', 'status'] },
-  'library-books': { table: 'library_book', pk: 'book_id', fields: ['isbn', 'title', 'author', 'copies'] },
-  'library-loans': { table: 'library_loan', pk: 'loan_id', fields: ['student_id', 'book_id', 'borrowed_date', 'due_date', 'returned_date'] },
 };
 function objectBody(body, allowed) {
   if (!body || typeof body !== 'object' || Array.isArray(body)) fail(422, 'A JSON object is required');
@@ -144,7 +123,6 @@ function validate(def, body, old) {
     } else if (typeof value !== 'string' || value.length > (field === 'isbn' ? 32 : 300)) fail(422, `${field} must be valid text`);
   }
   if (def.table === 'attendance' && !['Present', 'Absent', 'Late', 'Excused'].includes(merged.status)) fail(422, 'Invalid attendance status');
-  if (def.table === 'library_loan' && (merged.due_date < merged.borrowed_date || (merged.returned_date != null && merged.returned_date < merged.borrowed_date))) fail(422, 'Loan dates must follow the borrowed date');
   return data;
 }
 function crud(db, def, method, segment, url, body) {
@@ -216,7 +194,6 @@ async function dispatchPortal(service, request, url, path, account, tokenHash) {
       WHERE e.student_id=? ORDER BY e.enrollment_id`).all(sid) };
     if (path === '/portal/attendance') return { status: 200, body: db.prepare(`SELECT a.*,c.course_code,c.course_name FROM attendance a JOIN enrollment e USING(enrollment_id)
       JOIN course_offering o USING(offering_id) JOIN course c USING(course_id) WHERE e.student_id=? ORDER BY a.date DESC,a.attendance_id DESC`).all(sid) };
-    if (path === '/portal/library') return { status: 200, body: db.prepare(`SELECT l.*, b.isbn,b.title,b.author FROM library_loan l JOIN library_book b USING(book_id) WHERE l.student_id=? ORDER BY l.loan_id DESC`).all(sid) };
     fail(404, 'Endpoint not found');
   }
   if (path === '/eer/people' && method === 'GET') {
@@ -335,7 +312,7 @@ export async function handle(request, service) {
       JOIN portal_account a USING(account_id) WHERE s.token_hash=? AND s.expires_at>?`).get(tokenHash, Date.now()) : null;
     const publicRoute = method === 'GET' && path === '/health' || method === 'POST' && path === '/auth/login';
     if (!publicRoute && !account) fail(401, 'Authentication required');
-    const studentAllowed = method === 'GET' && ['/portal/me', '/portal/courses', '/portal/attendance', '/portal/library', '/auth/me'].includes(path)
+    const studentAllowed = method === 'GET' && ['/portal/me', '/portal/courses', '/portal/attendance', '/auth/me'].includes(path)
       || method === 'POST' && path === '/auth/logout';
     if (!publicRoute && account.role !== 'admin' && !studentAllowed) fail(403, 'Administrator access required');
     result = await withSqlAudit({ request_id: randomUUID(), method, path: `/api${path}`, role: account?.role ?? 'anonymous', account_id: account?.account_id, student_id: account?.student_id },

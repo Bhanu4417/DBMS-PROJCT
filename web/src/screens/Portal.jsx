@@ -4,7 +4,7 @@ import {
   ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from 'recharts';
 import {
-  Award, BookOpen, CalendarCheck, ClipboardList, GraduationCap, Library,
+  Award, BookOpen, CalendarCheck, GraduationCap,
 } from 'lucide-react';
 import StatCard from '../components/StatCard';
 import Badge from '../components/Badge';
@@ -14,7 +14,7 @@ import api, { errorMessage } from '../services/api';
 // Charts are computed in the browser from the same four portal responses.
 // Same honesty rules as before: Present/total attendance, credits include
 // Dropped/Completed rows, overdue is a client-side date comparison, no fines.
-const tabs = ['Overview', 'My courses', 'Attendance', 'Library'];
+const tabs = ['Overview', 'My courses', 'Attendance'];
 const ATTENDANCE_COLORS = { Present: '#83D63B', Late: '#F59E0B', Excused: '#A1A1AA', Absent: '#EF4444' };
 const date = (value) => value
   ? new Date(`${String(value).slice(0, 10)}T12:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
@@ -38,8 +38,8 @@ export default function Portal({ user }) {
     setLoading(true);
     setError('');
     setData(null);
-    Promise.all(['me', 'courses', 'attendance', 'library'].map((name) => api.get(`/portal/${name}`, { signal: controller.signal })))
-      .then(([profile, courses, attendance, library]) => { if (active) setData({ profile: profile.data, courses: courses.data, attendance: attendance.data, library: library.data }); })
+    Promise.all(['me', 'courses', 'attendance'].map((name) => api.get(`/portal/${name}`, { signal: controller.signal })))
+      .then(([profile, courses, attendance]) => { if (active) setData({ profile: profile.data, courses: courses.data, attendance: attendance.data }); })
       .catch((err) => { if (active) setError(errorMessage(err)); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; controller.abort(); };
@@ -50,12 +50,12 @@ export default function Portal({ user }) {
       <div className="space-y-6">
         <header><p className="mb-2 text-xs font-semibold uppercase tracking-widest text-accent">Student portal</p><h1 className="text-2xl font-semibold text-ink">{data ? 'Your academic overview' : 'Loading…'}</h1><p className="mt-2 text-sm text-muted">Your academic records, all in one place. Read-only access.</p></header>
         {error ? <div role="alert" className="card space-y-3 p-6"><p className="text-danger">{error}</p><button className="btn-ghost" onClick={() => setAttempt((n) => n + 1)}>Retry</button></div>
-          : <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">{Array.from({ length: 6 }).map((_, i) => <CardSkeleton key={i} height={120} />)}</div>}
+          : <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">{Array.from({ length: 4 }).map((_, i) => <CardSkeleton key={i} height={120} />)}</div>}
       </div>
     );
   }
 
-  const { courses, attendance, library } = data;
+  const { courses, attendance } = data;
   const byStatus = (status) => attendance.filter((row) => row.status === status).length;
   const present = byStatus('Present');
   const late = byStatus('Late');
@@ -103,41 +103,27 @@ export default function Portal({ user }) {
     acc[key] = (acc[key] || 0) + 1;
     return acc;
   }, {})).map(([name, value]) => ({ name, value }));
-  const unreturned = library.filter((row) => !row.returned_date);
-  const overdue = unreturned.filter((row) => row.due_date && new Date(`${row.due_date}T23:59:59`) < new Date());
-  const loansByMonth = Object.values(library.reduce((acc, row) => {
-    const key = monthKey(row.borrowed_date);
-    acc[key] ??= { month: monthLabel(key), borrowed: 0, returned: 0 };
-    acc[key].borrowed += 1;
-    if (row.returned_date) acc[key].returned += 1;
-    return acc;
-  }, {})).sort((a, b) => a.month.localeCompare(b.month));
-  const loans = unreturned.length;
   const credits = courses.reduce((sum, row) => sum + (Number(row.credits) || 0), 0);
-  const nextDue = [...unreturned].filter((row) => row.due_date).sort((a, b) => a.due_date.localeCompare(b.due_date))[0];
 
   return (
     <div className="space-y-6">
       <header><p className="mb-2 text-xs font-semibold uppercase tracking-widest text-accent">Student portal</p><h1 className="text-2xl font-semibold text-ink">{`Welcome, ${data.profile.full_name || 'student'}`}</h1><p className="mt-2 text-sm text-muted">Your academic records, charts and history, all in one place. Read-only access.</p></header>
       <div className="flex gap-2 overflow-x-auto border-b border-line pb-3" role="tablist" aria-label="Student records">{tabs.map((name) => <button key={name} id={`tab-${name.replaceAll(' ', '-')}`} type="button" role="tab" aria-selected={tab === name} aria-controls="portal-panel" className={`${tab === name ? 'btn-primary' : 'btn-ghost'} shrink-0 text-sm`} onClick={() => setTab(name)}>{name}</button>)}</div>
       <section id="portal-panel" role="tabpanel" aria-labelledby={`tab-${tab.replaceAll(' ', '-')}`} className="space-y-5">
-        {tab === 'Overview' && <OverviewTab user={user} data={data} credits={credits} rate={rate} present={present} graded={graded} loans={loans} overdue={overdue.length} nextDue={nextDue} statuses={statuses} perCourse={perCourse} creditsBySemester={creditsBySemester} marksByCourse={marksByCourse} />}
+        {tab === 'Overview' && <OverviewTab user={user} data={data} credits={credits} rate={rate} present={present} graded={graded} statuses={statuses} perCourse={perCourse} creditsBySemester={creditsBySemester} marksByCourse={marksByCourse} />}
         {tab === 'My courses' && <CoursesTab courses={courses} marksByCourse={marksByCourse} gradeMix={gradeMix} credits={credits} />}
         {tab === 'Attendance' && <AttendanceTab attendance={attendance} rate={rate} present={present} late={late} excused={excused} absent={absent} statuses={statuses} perCourse={perCourse} monthly={monthly} />}
-        {tab === 'Library' && <LibraryTab library={library} loans={loans} overdue={overdue} loansByMonth={loansByMonth} />}
       </section>
     </div>
   );
 }
 
-function OverviewTab({ user, data, credits, rate, present, graded, loans, overdue, nextDue, statuses, perCourse, creditsBySemester, marksByCourse }) {
+function OverviewTab({ user, data, credits, rate, present, graded, statuses, perCourse, creditsBySemester, marksByCourse }) {
   const cards = [
     { label: 'Enrolled courses', value: data.courses.length, icon: BookOpen, tone: 'accent', hint: 'All enrollment records' },
     { label: 'Total credits', value: credits, icon: GraduationCap, tone: 'blue', hint: 'Includes Dropped/Completed rows' },
     { label: 'Attendance', value: rate ?? '—', icon: CalendarCheck, tone: 'success', hint: `${present} present records` },
-    { label: 'Active loans', value: loans, icon: Library, tone: 'warning', hint: `${overdue} overdue` },
     { label: 'Graded courses', value: graded.length, icon: Award, tone: 'success', hint: `${data.courses.length - graded.length} awaiting marks` },
-    { label: 'Unreturned loans', value: loans, icon: ClipboardList, tone: 'danger', hint: `${nextDue ? `Next due ${date(nextDue.due_date)}` : 'Nothing out'}` },
   ];
   return <>
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">{cards.map((card) => <StatCard key={card.label} {...card} />)}</div>
@@ -155,14 +141,13 @@ function OverviewTab({ user, data, credits, rate, present, graded, loans, overdu
           : <NoChart message="No enrollments yet." />}
       </ChartCard>
     </div>
-    <div className="grid gap-4 lg:grid-cols-3">
-      <section className="card p-6 lg:col-span-2"><h2 className="mb-5 font-semibold text-ink">Course attendance overview</h2>{perCourse.length ? <div className="space-y-3">{perCourse.map((row) => <div key={row.code} className="flex items-center gap-4 text-sm"><div className="min-w-0 flex-1"><p className="truncate font-medium text-ink">{row.name}</p><p className="text-xs text-muted">{row.code} · {row.present}/{row.total} present</p></div><div className="h-2.5 w-40 overflow-hidden rounded-full bg-soft"><div className="h-full rounded-full" style={{ width: `${row.pct}%`, background: row.pct >= 75 ? '#83D63B' : row.pct >= 50 ? '#F59E0B' : '#EF4444' }} /></div><span className="w-12 text-right font-semibold text-ink">{row.pct}%</span></div>)}</div> : <p className="text-sm text-muted">No attendance records yet.</p>}</section>
+    <div className="grid gap-4 lg:grid-cols-2">
+      <section className="card p-6"><h2 className="mb-5 font-semibold text-ink">Course attendance overview</h2>{perCourse.length ? <div className="space-y-3">{perCourse.map((row) => <div key={row.code} className="flex items-center gap-4 text-sm"><div className="min-w-0 flex-1"><p className="truncate font-medium text-ink">{row.name}</p><p className="text-xs text-muted">{row.code} · {row.present}/{row.total} present</p></div><div className="h-2.5 w-40 overflow-hidden rounded-full bg-soft"><div className="h-full rounded-full" style={{ width: `${row.pct}%`, background: row.pct >= 75 ? '#83D63B' : row.pct >= 50 ? '#F59E0B' : '#EF4444' }} /></div><span className="w-12 text-right font-semibold text-ink">{row.pct}%</span></div>)}</div> : <p className="text-sm text-muted">No attendance records yet.</p>}</section>
       <div className="space-y-4">
         <section className="card p-6"><h2 className="mb-5 font-semibold text-ink">Student profile</h2><dl className="space-y-4">{[['Full name', data.profile.full_name], ['Enrollment number', data.profile.enrollment_number], ['Email', data.profile.email || user?.email], ['Department', data.profile.department_name], ['Department code', data.profile.department_code]].map(([label, value]) => <div key={label} className="flex flex-wrap justify-between gap-2 text-sm"><dt className="text-muted">{label}</dt><dd className="break-all text-ink">{value || '—'}</dd></div>)}</dl></section>
-        <section className="card p-6"><h2 className="mb-4 font-semibold text-ink">Library at a glance</h2><p className="text-sm text-muted">{loans ? `${loans} book${loans === 1 ? '' : 's'} currently on loan${overdue ? `, ${overdue} overdue` : ''}.` : 'No books currently on loan.'}</p>{nextDue && <div className="mt-5 rounded-lg border border-line bg-soft p-4"><p className="text-xs uppercase tracking-wide text-muted">Next due date</p><p className="mt-2 text-lg font-semibold text-ink">{date(nextDue.due_date)}</p><p className="mt-1 text-sm text-muted">{nextDue.title}</p></div>}</section>
       </div>
     </div>
-    <p className="text-xs text-muted">Attendance percentage is Present records ÷ all attendance records, rounded. Late and Excused are not counted as Present. Credits and course counts include Dropped and Completed enrollments. Overdue compares the due date with today in your browser; no fine is calculated.</p>
+    <p className="text-xs text-muted">Attendance percentage is Present records ÷ all attendance records, rounded. Late and Excused are not counted as Present. Credits and course counts include Dropped and Completed enrollments.</p>
   </>;
 }
 
@@ -212,29 +197,6 @@ function AttendanceTab({ attendance, rate, present, late, excused, absent, statu
         : <p className="p-8 text-sm text-muted">No attendance records yet.</p>}
     </section>
     <p className="text-xs text-muted">Rate = Present ÷ all records, rounded. Late, Excused and Absent are not counted as Present. Marks and attendance come from the same read-only portal queries.</p>
-  </>;
-}
-
-function LibraryTab({ library, loans, overdue, loansByMonth }) {
-  const returned = library.length - loans;
-  return <>
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      <StatCard label="Total loans" value={library.length} icon={Library} tone="blue" hint="All-time borrow history" />
-      <StatCard label="Returned" value={returned} icon={BookOpen} tone="success" hint="Completed loans" />
-      <StatCard label="On loan" value={loans - overdue.length} icon={Library} tone="accent" hint="Not yet returned" />
-      <StatCard label="Overdue" value={overdue.length} icon={CalendarCheck} tone="danger" hint="Past due date" />
-    </div>
-    {loansByMonth.length > 0 && <ChartCard title="Borrowing history" subtitle="Books borrowed and returned per month"><ResponsiveContainer width="100%" height={240}><BarChart data={loansByMonth} barSize={26}><CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--border))" vertical={false} /><XAxis dataKey="month" tickLine={false} axisLine={false} /><YAxis allowDecimals={false} tickLine={false} axisLine={false} width={28} /><Tooltip /><Legend iconType="circle" /><Bar dataKey="borrowed" name="Borrowed" fill="#83D63B" radius={[6, 6, 0, 0]} /><Bar dataKey="returned" name="Returned" fill="#A1A1AA" radius={[6, 6, 0, 0]} /></BarChart></ResponsiveContainer></ChartCard>}
-    {overdue.length > 0 && <div role="alert" className="card border-danger/40 p-4 text-sm text-ink">{overdue.length} loan{overdue.length === 1 ? '' : 's'} past the due date: {overdue.map((row) => `${row.title} (due ${date(row.due_date)})`).join(' · ')}</div>}
-    <section className="card overflow-x-auto">
-      <h2 className="px-5 pt-5 font-semibold text-ink">Loan history</h2>
-      {library.length ? <table className="mt-4 w-full text-left text-sm"><thead className="border-b border-line bg-soft text-xs text-muted"><tr>{['Book', 'Borrowed', 'Due', 'Returned', 'Status'].map((heading) => <th key={heading} className="whitespace-nowrap px-5 py-3 font-medium" scope="col">{heading}</th>)}</tr></thead><tbody className="divide-y divide-line">{library.map((row) => {
-        const isOverdue = !row.returned_date && row.due_date && new Date(`${row.due_date}T23:59:59`) < new Date();
-        return <tr key={row.loan_id}><td className="px-5 py-4"><div><p className="font-medium text-ink">{row.title}</p><p className="text-xs text-muted">{row.author} · {row.isbn}</p></div></td><td className="whitespace-nowrap px-5 py-4 text-ink">{date(row.borrowed_date)}</td><td className="whitespace-nowrap px-5 py-4 text-ink">{date(row.due_date)}</td><td className="whitespace-nowrap px-5 py-4 text-ink">{date(row.returned_date)}</td><td className="px-5 py-4">{row.returned_date ? <Badge value="Returned" /> : isOverdue ? <span className="chip border-danger/40 bg-danger/10 text-danger">Overdue</span> : <span className="chip border-accent/40 bg-accent/10 text-accent">On loan</span>}</td></tr>;
-      })}</tbody></table>
-        : <p className="p-8 text-sm text-muted">No library loans yet.</p>}
-    </section>
-    <p className="text-xs text-muted">Overdue compares the due date with today in your browser. No fine amounts are calculated, and returning books still requires the library desk on the admin side.</p>
   </>;
 }
 

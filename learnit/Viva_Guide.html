@@ -40,7 +40,7 @@
 <p class="lead">A 4–5 minute spoken walkthrough with timings, the tab-by-tab map, and a rapid-fire Q&amp;A sheet. Speak the <span class="quote" style="display:inline;padding:0 2mm;">quoted blocks</span>; keep the tables as your glance notes.</p>
 
 <h2>1 · Opening <span class="time">30 sec</span></h2>
-<div class="quote">"My project is <b>CampusOS</b> — a College Management System covering students, faculty, departments, courses, offerings, enrollments and grades, plus attendance and a library module. What I'll emphasize today is the part I personally built: <b>the frontend, the backend integration layer, and codebase management</b>. The distinctive thing is that it is not one demo — it is <b>one backend contract served by two independent frontends</b>, which forced me to keep integration discipline."</div>
+<div class="quote">"My project is <b>CampusOS</b> — a College Management System covering students, faculty, departments, courses, offerings, enrollments and grades, plus attendance and an optional EER identity/weak-contact layer. What I'll emphasize today is the part I personally built: <b>the frontend, the backend integration layer, and codebase management</b>. The distinctive thing is that it is not one demo — it is <b>one backend contract served by two independent frontends</b>, which forced me to keep integration discipline."</div>
 
 <h2>2 · Tech stack <span class="time">60 sec</span></h2>
 <div class="quote">"There are two builds in my repo. <b>The build I'm demonstrating</b> is Next.js 15 with React 19 on Node 26. The database is <b>SQLite running inside the Node process itself</b> using the official <code>node:sqlite</code> module — no separate database server; API and DB share one runtime. Data lives in a WAL-mode SQLite file, and schema, seed and migrations are SQL files under version control. Styling is <b>Tailwind CSS</b> with design tokens — charcoal surfaces, one flat green accent, no gradients: a clean, tool-like UI. <b>The second build</b> is a classic split stack: React + Vite frontend, FastAPI with SQLAlchemy and Pydantic, and <b>PostgreSQL 16 in Docker</b>. Both builds speak almost the same REST contract — that's my proof the integration layer is clean. Everything else is small: axios for HTTP, recharts for charts, lucide-react for icons, react-hook-form for forms. Testing is Node's built-in test runner plus Puppeteer browser smoke tests."</div>
@@ -55,7 +55,7 @@
 
 <h2>3 · How the frontend is made <span class="time">90 sec</span></h2>
 <div class="quote">"The frontend is a single admin application rendered inside one smart root component, <code>CollegeApp.jsx</code> — a state machine with three states: <i>loading</i> (calls <code>/auth/me</code> to hydrate the session), <i>unauthenticated</i> (Login screen), <i>authenticated</i> (student portal or admin workspace based on the server-side role). So authorization isn't cosmetic — the React tree itself is different per role.</div>
-<div class="quote">"The key architectural idea is the <b>generic ResourcePage component</b>: fourteen reusable building blocks — DataTable, FormModal, ConfirmDialog, Pagination, Badge, Field, EmptyState, ErrorState, Skeleton — plus one config file, <code>resources.js</code>, declaring every entity as data: endpoint, columns, form fields, validation, sort, delete warning. A Student page and a Course page are the same component fed different config. I added attendance and the library module with roughly 15 lines of config and zero new components.</div>
+<div class="quote">"The key architectural idea is the <b>generic ResourcePage component</b>: fourteen reusable building blocks — DataTable, FormModal, ConfirmDialog, Pagination, Badge, Field, EmptyState, ErrorState, Skeleton — plus one config file, <code>resources.js</code>, declaring every entity as data: endpoint, columns, form fields, validation, sort, delete warning. A Student page and a Course page are the same component fed different config. I added attendance and optional EER identity/contact management without changing the legacy academic identities.</div>
 <div class="quote">"Data flow is one-directional. All HTTP goes through one axios instance in <code>services/api.js</code>. Failures are normalized there: a 401 fires a global session-expired event; 409/422 become readable field messages; and <b>only GET requests auto-retry</b> — mutations are never silently re-sent, because a retried POST could create a duplicate record."</div>
 <ul>
   <li><b>Routing:</b> one catch-all page resolves <code>/students</code>, <code>/students/41</code>, <code>/reports</code>, <code>/settings</code> into a shared shell — fixed sidebar, topbar with theme toggle, shared toast notifications.</li>
@@ -70,13 +70,13 @@
   <tr><td><b>Courses → Offerings → Enrollments → Grades</b></td><td>The academic chain: a course offered per semester with section &amp; capacity; students enroll into an offering; grades attach to enrollments. <b>Capacity is enforced in the DB with triggers + immediate transactions</b> — a lost race gets a readable 409.</td></tr>
   <tr><td><b>Semesters</b></td><td>Academic calendar anchor for offerings.</td></tr>
   <tr><td><b>Attendance</b></td><td>Per-enrollment date records (Present / Absent / Late / Excused).</td></tr>
-  <tr><td><b>Library books / loans</b></td><td>Catalog plus issued-book tracking with due dates and overdue flags.</td></tr>
+
   <tr><td><b>Reports</b></td><td>SQL aggregation: per-student GPA, grade distribution, semester counts; CSV export.</td></tr>
   <tr><td><b>Student access</b></td><td>Provision a student's login, linked to their student record.</td></tr>
   <tr><td><b>SQL activity</b></td><td>Live audit of the last 200 SQL statements executed, excluding password/session tables.</td></tr>
   <tr><td><b>Settings</b></td><td>Environment info + one-click download of the whole database as SQL (reproducible demo state).</td></tr>
 </table>
-<div class="quote">"The <b>student role</b> sees none of that — a four-tab read-only portal: Overview, My courses with grades, Attendance with a computed rate, Library. Every query is filtered server-side by the student ID bound to the account, so account A physically cannot read account B's rows."</div>
+<div class="quote">"The <b>student role</b> sees none of that — a three-tab read-only portal: Overview, My courses with grades, and Attendance. Every query is filtered server-side by the student ID bound to the account, so account A physically cannot read account B's rows."</div>
 
 <h2>5 · Auth + closing <span class="time">45 sec</span></h2>
 <div class="quote">"Authentication is real, not demo-mocked: <b>scrypt-hashed passwords, server-side sessions in the database, HttpOnly SameSite cookies,</b> cross-origin protection, and login throttling per account. Plain-text passwords exist nowhere. Engineering discipline wraps it up: <b>14 Node test suites</b> covering CRUD, constraints, capacity races, authorization and the audit trail; a <b>24-check Puppeteer smoke test</b> in real Chromium; feature-scoped git commits; and personal data — the live SQLite file and SQL snapshots — is deliberately gitignored. So: one contract, two stacks, a config-driven frontend, database-enforced integrity, and tests that prove both."</div>
@@ -107,7 +107,7 @@
 <h2>7 · Numbers to have ready</h2>
 <table>
   <tr><th>Fact</th><th>Value</th></tr>
-  <tr><td>Domain tables</td><td>12 (9 academic + attendance, library_book, library_loan)</td></tr>
+  <tr><td>Academic/attendance tables</td><td>10 (9 academic + attendance); the current website also has four auth/support tables and four EER identity/contact tables.</td></tr>
   <tr><td>Auth/support tables</td><td>4 (portal_account, portal_session, login_throttle, portal_migration)</td></tr>
   <tr><td>Password/token storage</td><td>scrypt hashes + SHA-256 token hashes only</td></tr>
   <tr><td>Session lifetime</td><td>8 hours, HttpOnly · SameSite=Strict</td></tr>

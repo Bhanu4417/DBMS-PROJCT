@@ -423,11 +423,4 @@ resources.attendance=simple('attendance','Attendance','attendance_id',[
 {name:'date',label:'Date',type:'date',required:true},
 {name:'status',label:'Status',type:'select',required:true,defaultValue:'Present',options:['Present','Absent','Late','Excused'].map(value=>({value,label:value}))}
 ],[{key:'enrollment_id',label:'Enrollment ID'},{key:'date',label:'Date',type:'date'},{key:'status',label:'Status',type:'badge'}]);
-resources['library-books']=simple('library-books','Library books','book_id',[
-{name:'isbn',label:'ISBN',required:true},{name:'title',label:'Title',required:true},{name:'author',label:'Author',required:true},{name:'copies',label:'Copies',type:'number',min:1,defaultValue:1,required:true}
-],[{key:'isbn',label:'ISBN'},{key:'title',label:'Title',type:'primary',sub:'author'},{key:'copies',label:'Copies',type:'count'}]);
-resources['library-loans']=simple('library-loans','Library loans','loan_id',[
-{name:'student_id',label:'Student',type:'select',source:'students',required:true},{name:'book_id',label:'Book ID (see Library books)',type:'number',min:1,required:true},
-{name:'borrowed_date',label:'Borrowed',type:'date',required:true},{name:'due_date',label:'Due',type:'date',required:true},{name:'returned_date',label:'Returned',type:'date'}
-],[{key:'student_id',label:'Student ID'},{key:'book_id',label:'Book ID'},{key:'borrowed_date',label:'Borrowed',type:'date'},{key:'due_date',label:'Due',type:'date'},{key:'returned_date',label:'Returned',type:'date'}]);
 export default resources;

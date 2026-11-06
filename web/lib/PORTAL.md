@@ -8,7 +8,7 @@
 - `GET /api/auth/me` returns that account shape; unauthenticated requests return 401.
 - `POST /api/auth/logout` revokes the session and clears the cookie. Empty body or `{}` accepted.
 - Mutations reject foreign/opaque Origin and cross-site fetch metadata. Same-origin browser requests work normally. CLI clients may omit Origin.
-- All API endpoints except GET health and POST login require authentication. Students can only GET `/portal/me`, `/portal/courses`, `/portal/attendance`, `/portal/library`, `/auth/me`, and POST `/auth/logout`.
+- All API endpoints except GET health and POST login require authentication. Students can only GET `/portal/me`, `/portal/courses`, `/portal/attendance`, `/auth/me`, and POST `/auth/logout`.
 - Demo admin: `admin@campus.local` / `CampusAdmin!2026`.
 - Demo student: `student1@campus.edu.in` / `CampusStudent!2026` (student ID 1; email comes from the existing student row).
 - `POST /api/admin/accounts` accepts ONLY `{student_id,password}` (12–256 characters). Email comes from the student record; role is always student. Returns account shape, 201; existing accounts return 409. This is provisioning, not password reset.
@@ -20,15 +20,12 @@ All student queries use the account's linked student ID and ignore client IDs.
 - `/portal/me`: student row plus `department_name,department_code`.
 - `/portal/courses`: array of enrollment rows plus `course_code,course_name,credits,section,semester_name,academic_year,marks_obtained,max_marks,grade_letter`.
 - `/portal/attendance`: array of `attendance_id,enrollment_id,date,status,course_code,course_name`.
-- `/portal/library`: array of `loan_id,student_id,book_id,borrowed_date,due_date,returned_date,isbn,title,author`.
 
 ## Admin resources
 
-`/api/attendance`, `/api/library-books`, `/api/library-loans` (also `/api/admin/...` aliases) support list/detail GET, collection POST, detail PUT/DELETE. Lists return `{items,total,page,page_size,pages}` (default 20, maximum 200). PUT is partial. DELETE returns `{detail}`. IDs are `attendance_id`, `book_id`, `loan_id` respectively.
+`/api/attendance` supports list/detail GET, collection POST, detail PUT/DELETE. Lists return `{items,total,page,page_size,pages}` (default 20, maximum 200). PUT is partial. DELETE returns `{detail}`. Attendance uses `attendance_id`.
 
 - Attendance fields: `enrollment_id,date,status`; statuses `Present|Absent|Late|Excused`. Unique enrollment/date. Use original `/api/enrollments/options` for dropdowns.
-- Book fields: `isbn,title,author,copies` (positive integer).
-- Loan fields: `student_id,book_id,borrowed_date,due_date,returned_date` (nullable returned date). Dates are YYYY-MM-DD; due/returned cannot precede borrowed.
 - Original admin APIs and CSV/SQL export response headers/bodies are preserved. SQL export remains admin-only.
 - Validation 422, duplicate/FK 409, malformed JSON 400, unavailable DB 503, generic internal errors 500. No exception text is exposed.
 
@@ -38,6 +35,6 @@ All student queries use the account's linked student ID and ignore client IDs.
 
 Admin `GET /api/dbviewer` returns `{items,limit:200}`. Event keys: `id,request_id,timestamp,method,path,role,account_id,student_id,sql,duration_ms,rows,success`. Path excludes query strings. `success` reflects final HTTP status (can be null while a request is in progress). Returned copies cannot mutate stored events.
 
-Portal tables: `portal_account`, `portal_session`, `login_throttle`, `attendance`, `library_book`, `library_loan`, `portal_migration`. SQL exports must exclude account/session/throttle data; include attendance/books/loans when extending snapshot data table list. Initialization and demo records are idempotent and preserve original academic records.
+The retired Library feature is removed at startup: legacy `library_loan` and `library_book` tables are dropped in a transaction; other academic, account, attendance, and EER records are preserved. SQL export excludes authentication data and includes attendance/EER records.
 
 Run: `node --test web/tests/api.test.mjs web/tests/portal.test.mjs` from workspace root (or `node --test tests/*.test.mjs` from web).

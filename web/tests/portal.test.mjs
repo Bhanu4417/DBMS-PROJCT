@@ -28,6 +28,7 @@ let admin, student;
 
 test('public health, auth, strict cookies, hashes and authorization for every original route', async () => {
   assert.equal((await call('GET', 'health')).status, 200);
+  assert.equal(service.db.prepare("SELECT count(*) n FROM sqlite_master WHERE type='table' AND name LIKE 'library_%'").get().n, 0);
   assert.equal((await call('GET', 'students')).status, 401);
   admin = await login('admin@campus.local', 'CampusAdmin!2026');
   student = await login('student1@campus.edu.in', 'CampusStudent!2026');
@@ -39,7 +40,7 @@ test('public health, auth, strict cookies, hashes and authorization for every or
   assert.ok(!JSON.stringify(student.body).includes('password'));
   const sessions = service.db.prepare('SELECT token_hash FROM portal_session').all();
   assert.ok(sessions.every(s => !student.cookie.includes(s.token_hash)));
-  for (const path of ['students', 'students/1', 'students/options', 'enrollments/options', 'dashboard/stats', 'reports', 'database/export.sql', 'attendance', 'library-books', 'library-loans', 'admin/accounts', 'dbviewer', 'nonexistent']) {
+  for (const path of ['students', 'students/1', 'students/options', 'enrollments/options', 'dashboard/stats', 'reports', 'database/export.sql', 'attendance', 'admin/accounts', 'dbviewer', 'nonexistent']) {
     assert.equal((await call('GET', path, undefined, student.cookie)).status, 403, path);
   }
   assert.equal((await call('GET', 'students', undefined, admin.cookie)).status, 200);
@@ -48,10 +49,13 @@ test('public health, auth, strict cookies, hashes and authorization for every or
   assert.equal((await call('POST', 'auth/logout', {}, student.cookie, { origin: 'null' })).status, 403);
   assert.equal((await call('POST', 'auth/logout', {}, student.cookie, { 'sec-fetch-site': 'cross-site' })).status, 403);
   assert.equal((await call('GET', 'auth/me', undefined, student.cookie)).status, 200);
+  assert.equal((await call('GET', 'library-books', undefined, admin.cookie)).status, 404);
+  assert.equal((await call('GET', 'library-loans', undefined, admin.cookie)).status, 404);
+  assert.equal(service.db.prepare("SELECT count(*) n FROM sqlite_master WHERE type='table' AND name LIKE 'library_%'").get().n, 0);
 });
 
 test('student self endpoints ignore client IDs and only expose linked rows', async () => {
-  for (const path of ['portal/me', 'portal/courses', 'portal/attendance', 'portal/library']) {
+  for (const path of ['portal/me', 'portal/courses', 'portal/attendance']) {
     const result = await call('GET', `${path}?student_id=2&enrollment_id=2`, undefined, student.cookie);
     assert.equal(result.status, 200);
     if (path === 'portal/me') assert.equal(result.body.student_id, 1);
@@ -67,7 +71,7 @@ test('student self endpoints ignore client IDs and only expose linked rows', asy
   }
 });
 
-test('attendance and library CRUD: validation, unique pairs, FK errors, aliases and safe SQL export', async () => {
+test('attendance CRUD validation, pagination, and safe SQL export', async () => {
   const attendance = await call('POST', 'attendance', { enrollment_id: 1, date: '2026-03-10', status: 'Present' }, admin.cookie);
   assert.equal(attendance.status, 201);
   const aid = attendance.body.attendance_id;
@@ -80,22 +84,6 @@ test('attendance and library CRUD: validation, unique pairs, FK errors, aliases 
   assert.equal((await call('PUT', `attendance/${aid}`, { status: 'Excused' }, admin.cookie)).body.status, 'Excused');
   assert.equal((await call('GET', 'attendance?page_size=201', undefined, admin.cookie)).status, 422);
   assert.equal((await call('GET', 'attendance', undefined, admin.cookie)).body.page_size, 20);
-  const book = await call('POST', 'admin/library-books', { isbn: 'TEST-ISBN-1', title: 'Test Book', author: 'Test Author', copies: 2 }, admin.cookie);
-  assert.equal(book.status, 201);
-  const bid = book.body.book_id;
-  assert.equal((await call('PUT', `library-books/${bid}`, { copies: 0 }, admin.cookie)).status, 422);
-  assert.equal((await call('PUT', `library-books/${bid}`, { title: 'Revised' }, admin.cookie)).body.title, 'Revised');
-  const loan = await call('POST', 'library-loans', { student_id: 1, book_id: bid, borrowed_date: '2026-03-01', due_date: '2026-03-14' }, admin.cookie);
-  assert.equal(loan.status, 201);
-  const lid = loan.body.loan_id;
-  assert.equal((await call('PUT', `library-loans/${lid}`, { returned_date: '2026-02-01' }, admin.cookie)).status, 422);
-  assert.equal((await call('PUT', `library-loans/${lid}`, { returned_date: '2026-03-12' }, admin.cookie)).status, 200);
-  assert.equal((await call('DELETE', `library-books/${bid}`, undefined, admin.cookie)).status, 409);
-  for (const [resource, id] of [['library-loans', lid], ['library-books', bid], ['attendance', aid]]) {
-    assert.equal((await call('GET', `${resource}/${id}`, undefined, admin.cookie)).status, 200);
-    assert.equal((await call('DELETE', `${resource}/${id}`, undefined, admin.cookie)).status, 200);
-    assert.equal((await call('GET', `${resource}/${id}`, undefined, admin.cookie)).status, 404);
-  }
   const snapshot = await call('GET', 'database/export.sql', undefined, admin.cookie);
   assert.equal(snapshot.status, 200);
   assert.match(snapshot.headers.get('content-type'), /application\/sql/);

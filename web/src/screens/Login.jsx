@@ -36,7 +36,7 @@ export default function Login({ onAuthenticated }) {
           <div className="space-y-5">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Your campus, connected</p>
             <h1 className="max-w-lg text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">A clear view of your academic life.</h1>
-            <p className="max-w-md text-base leading-relaxed text-muted">Courses, attendance and library records. One secure place to stay informed and keep moving forward.</p>
+            <p className="max-w-md text-base leading-relaxed text-muted">Courses and attendance records. One secure place to stay informed and keep moving forward.</p>
           </div>
           <p className="flex items-center gap-2 text-sm text-muted"><ShieldCheck size={18} className="text-accent" /> Secure, role-based access</p>
         </section>

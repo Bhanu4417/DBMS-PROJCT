@@ -58,7 +58,7 @@ export default function AdminAccounts() {
           </form>}
           {created && <div role="status" className="mt-5 rounded-lg border border-line bg-soft p-4"><p className="text-sm font-semibold text-accent">Account created</p><p className="mt-2 break-all text-sm text-ink">{created.email}</p><p className="mt-1 text-xs text-muted">Role: {created.role} · Student ID: {created.student_id}</p></div>}
         </section>
-        <aside className="card self-start p-5"><ShieldCheck size={22} className="mb-4 text-accent" /><h2 className="font-semibold text-ink">Student access only</h2><p className="mt-3 text-sm leading-relaxed text-muted">The sign-in email comes from the selected student’s record. Accounts can only view their own courses, attendance and library loans.</p><p className="mt-4 text-sm leading-relaxed text-muted">This creates a new account. It does not reset passwords or replace existing accounts.</p></aside>
+        <aside className="card self-start p-5"><ShieldCheck size={22} className="mb-4 text-accent" /><h2 className="font-semibold text-ink">Student access only</h2><p className="mt-3 text-sm leading-relaxed text-muted">The sign-in email comes from the selected student’s record. Accounts can only view their own courses and attendance records.</p><p className="mt-4 text-sm leading-relaxed text-muted">This creates a new account. It does not reset passwords or replace existing accounts.</p></aside>
       </div>
     </div>
   );

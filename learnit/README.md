@@ -8,7 +8,7 @@
 - [10-minute use-case presentation (PDF)](usecase.pdf) — frontend/backend developer presentation: stack choices, component architecture, integration, admin/student tabs and SQL activity; brief PK/FK reference, no ER diagrams. [Editable HTML](usecase.html).
 - [Short viva speaking guide (PDF)](Viva_Guide.pdf) · [Editable HTML](Viva_Guide.html).
 
-## Current implementation (20 tables)
+## Current implementation (18 tables)
 
 - [Read-only SQLite query worksheet](Explore_CampusOS_SQL.sql) — ready-to-run examples for checking saved student/enrollment/grade records and Person/contact data. [Admin panel SQL guide](Admin_SQL_Guide.md) explains actual application queries versus standalone examples.
 
@@ -22,7 +22,7 @@
 
 The detailed current SQLite entity dictionary and EER extension are in [CampusOS_ER_EER_v2.pdf](CampusOS_ER_EER_v2.pdf); old nine-table diagrams below are historical.
 
-The original nine-table diagrams and chapters below are preserved unchanged. They do **not** cover the current portal's attendance, library or authentication tables.
+The library feature has been removed from the current website and its two legacy SQLite tables are dropped at runtime startup. Older study-pack pages, diagrams and PDFs may still describe the library as historical/earlier-version content.
 
 
 The syllabus image is **unavailable** in this session. Topic mapping in [topics.md](topics.md) is based on the prior discussion supplied in the request, not on claimed image access. It is a topic checklist, not a verified transcription of an official syllabus.
